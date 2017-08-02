@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Implementation-Title: refactor
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: angel
+Built-By: Administrator
 Implementation-Vendor-Id: sysu
-Build-Jdk: 1.8.0_131
+Build-Jdk: 1.8.0_144
 Implementation-URL: http://projects.spring.io/spring-boot/refactor/
 Created-By: Maven Integration for Eclipse
 Implementation-Vendor: Pivotal Software, Inc.
