@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"><!-- 1 -->
+<head>
+<meta content="text/html;charset=UTF-8"/>
+<title sec:authentication="name"></title> <!-- 2 -->
+<link rel="stylesheet" th:href="@{css/bootstrap.min.css}" />
+<link rel="stylesheet" th:href="@{css/syntaxhighlighter/shCoreEclipse.css}"/>
+<script type="text/javascript" th:src="@{js/syntaxhighlighter/shCore.js}"></script>
+<script type="text/javascript" th:src="@{js/syntaxhighlighter/shBrushJava.js}"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+<style type="text/css">
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+</style>
+    
+</head>
+<body>
+     <div class="container">
+
+<pre class="brush:java">
+package commconsistency.domain;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.data.mongodb.core.mapping.Field;
+public class DiffType {
+	
+	private String type;
+	
+	@Field("new_start_line")
+	private int newStartLine;
+	
+	@Field("new_end_line")
+	private int newEndLine;
+	
+	@Field("old_start_line")
+	private int oldStartLine;
+	
+	@Field("old_end_line")
+	private int oldEndLine;
+	
+	@Field("new_hashs")
+	private List&lt;Long> newHashList = new ArrayList&lt;Long>();
+	
+	@Field("old_hashs")
+	private List&lt;Long> oldHashList = new ArrayList&lt;Long>();
+	
+	@Field("new_keywords")
+	private List&lt;String> newKeywordList = new ArrayList&lt;String>();
+	
+	@Field("old_keywords")
+	private List&lt;String> oldKeywordList = new ArrayList&lt;String>();
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public int getOldStartLine() {
+		return oldStartLine;
+	}
+	public void setOldStartLine(int oldStartLine) {
+		this.oldStartLine = oldStartLine;
+	}
+	public int getOldEndLine() {
+		return oldEndLine;
+	}
+	public void setOldEndLine(int oldEndLine) {
+		this.oldEndLine = oldEndLine;
+	}
+	public int getNewStartLine() {
+		return newStartLine;
+	}
+	public void setNewStartLine(int newStartLine) {
+		this.newStartLine = newStartLine;
+	}
+	public int getNewEndLine() {
+		return newEndLine;
+	}
+	public void setNewEndLine(int newEndLine) {
+		this.newEndLine = newEndLine;
+	}
+	public List&lt;Long> getNewHashList() {
+		return newHashList;
+	}
+	public void setNewHashList(List&lt;Long> newHashList) {
+		this.newHashList = newHashList;
+	}
+	public List&lt;Long> getOldHashList() {
+		return oldHashList;
+	}
+	public void setOldHashList(List&lt;Long> oldHashList) {
+		this.oldHashList = oldHashList;
+	}
+	public void addNewHash(long newHash){
+		newHashList.add(newHash);
+	}
+	public void addOldHash(long oldHash){
+		oldHashList.add(oldHash);
+	}
+	public List&lt;String> getNewKeywordList() {
+		return newKeywordList;
+	}
+	public void setNewKeywordList(List&lt;String> newKeywordList) {
+		this.newKeywordList = newKeywordList;
+	}
+	public List&lt;String> getOldKeywordList() {
+		return oldKeywordList;
+	}
+	public void setOldKeywordList(List&lt;String> oldKeywordList) {
+		this.oldKeywordList = oldKeywordList;
+	}
+	public void addNewKeyword(String keyword){
+		newKeywordList.add(keyword);
+	}
+	public void addOldKeyword(String keyword){
+		oldKeywordList.add(keyword);
+	}
+}
+
+</pre>
+      
+
+    </div>
+    
+	
+</body>
+</html>

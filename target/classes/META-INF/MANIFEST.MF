@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Implementation-Title: commconsistency
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: Administrator
+Built-By: angel
 Implementation-Vendor-Id: sysu
-Build-Jdk: 1.8.0_144
+Build-Jdk: 1.8.0_131
 Implementation-URL: http://projects.spring.io/spring-boot/commconsiste
  ncy/
 Created-By: Maven Integration for Eclipse
