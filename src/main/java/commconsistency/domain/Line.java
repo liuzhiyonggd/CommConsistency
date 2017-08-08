@@ -3,6 +3,7 @@ package commconsistency.domain;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 public class Line {
+	
 	@Field("line_number")
 	private int lineNumber;
 	private String line;

@@ -29,7 +29,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
-
+		
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
 			<groupId>commons-io</groupId>

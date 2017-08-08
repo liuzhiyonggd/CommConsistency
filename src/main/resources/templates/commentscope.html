@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js">
+<html xmlns:th="http://www.thymeleaf.org" class="no-js">
     
     <head>
         <title>Comment Consistency</title>
@@ -55,7 +55,7 @@
                                 <a href="/">Home</a>
                             </li>
                             <li class="active">
-                                <a href="/commentscope">Comment Scope</a>
+                                <a href="/commentscopelist">Comment Scope</a>
                             </li>
                                     
                             <li>
@@ -81,17 +81,14 @@
                                 <div class="span12">
                                      <form class="form-horizontal">
                                       <fieldset>
-                                        <legend>JHotdraw Main.java</legend>
-                                        <pre class="brush:java;">
-                                        public class A{
-                                            public void add(){
-                                                System.out.println("hello world.");
-                                            }
-                                        }
+                                        <legend th:text="${comment.project+' '+comment.commitID+'  '+comment.className}"></legend>
+                                        <pre name="code" class="brush:java;">
+                                             
                                         </pre>
-                                        <div class="form-actions">
-                                          <button type="submit" class="btn btn-primary">Save changes</button>
-                                          <button type="reset" class="btn">Cancel</button>
+                                        <div class="form-actions" style="align-content: flex-start;">
+                                        <input class="input-xlarge focused" id="endline" type="text" value="input end line..." onClick="Cleartext(this.id)"/>
+                                          <button type="submit" class="btn btn-primary">Save</button>
+                                          
                                         </div>
                                       </fieldset>
                                     </form>
@@ -124,7 +121,16 @@
 	<script type="text/javascript" src="vendors/syntaxhighlighter/scripts/shCore.js"></script>
 	<script type="text/javascript" src="vendors/syntaxhighlighter/scripts/shBrushJava.js"></script>
 	
-	<script type="text/javascript">SyntaxHighlighter.all();</script>
+	<script th:inline="javascript">
+	    document.getElementsByTagName('pre')[0].innerHTML = [[${comment.code}]]
+	    SyntaxHighlighter.defaults['first-line'] = [[${firstline}]]
+	    SyntaxHighlighter.defaults['highlight'] = [[${highlight}]]
+	    SyntaxHighlighter.all()
+	    
+	    function Cleartext(tname){
+            var t=document.getElementById(tname).value="";
+        }
+	</script>
     </body>
 
 </html>
