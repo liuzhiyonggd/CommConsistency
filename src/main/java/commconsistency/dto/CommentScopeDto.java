@@ -7,6 +7,7 @@ public class CommentScopeDto {
 	private String commitID;
 	private String className;
 	private String code;
+	private int scopeEndLine;
 	public int getCommentID() {
 		return commentID;
 	}
@@ -36,6 +37,12 @@ public class CommentScopeDto {
 	}
 	public void setCode(String code) {
 		this.code = code;
+	}
+	public int getScopeEndLine() {
+		return scopeEndLine;
+	}
+	public void setScopeEndLine(int scopeEndLine) {
+		this.scopeEndLine = scopeEndLine;
 	}
 	
 	

@@ -1,6 +1,7 @@
 package commconsistency.domain;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -33,6 +34,8 @@ public class CommentScope {
 	private int commentEndLine;
 	@Field("codes")
 	private Collection<Line> codeList;
+	
+	private List<Integer> verifyScopeEndLineList;
 	
 	public int getCommentID() {
 		return commentID;
@@ -105,6 +108,12 @@ public class CommentScope {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public List<Integer> getVerifyScopeEndLineList() {
+		return verifyScopeEndLineList;
+	}
+	public void setVerifyScopeEndLineList(List<Integer> verifyScopeEndLineList) {
+		this.verifyScopeEndLineList = verifyScopeEndLineList;
 	}
 	
 	

@@ -1,14 +1,19 @@
 package commconsistency.web;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import commconsistency.dao.CommentScopeRepository;
 import commconsistency.domain.CommentScope;
@@ -91,5 +96,15 @@ public class CommentScopeController {
 		}
 		model.addAttribute("highlight", highlightNums);
 		return "commentscope";
+	}
+	
+	@RequestMapping("/save")
+	public ModelAndView commentScopeSave(@ModelAttribute CommentScopeDto commentScopeDto,Model model) {
+		int commentID = commentScopeDto.getCommentID();
+		int verifyScopeEndLine = commentScopeDto.getScopeEndLine();
+		CommentScope comment = commentScopeRepository.findByCommentID(commentID);
+		comment.getVerifyScopeEndLineList().add(verifyScopeEndLine);
+		
+		return new ModelAndView("redirect:/commentscopeview?commentID="+(commentID+1));
 	}
 }

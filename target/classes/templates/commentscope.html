@@ -79,14 +79,15 @@
                             </div>
                             <div class="block-content collapse in">
                                 <div class="span12">
-                                     <form class="form-horizontal">
+                                     <form class="form-horizontal" th:action="@{/save}" th:object="${comment}" method="post">
                                       <fieldset>
+                                        <input style="display:none;" th:field="*{commentID}" th:value="${comment.commentID}"/>
                                         <legend th:text="${comment.project+' '+comment.commitID+'  '+comment.className}"></legend>
                                         <pre name="code" class="brush:java;">
                                              
                                         </pre>
                                         <div class="form-actions" style="align-content: flex-start;">
-                                        <input class="input-xlarge focused" id="endline" type="text" value="input end line..." onClick="Cleartext(this.id)"/>
+                                        <input class="input-xlarge focused" th:field="*{scopeEndLine}" type="text" value="input end line..." onClick="Cleartext(this.id)"/>
                                           <button type="submit" class="btn btn-primary">Save</button>
                                           
                                         </div>

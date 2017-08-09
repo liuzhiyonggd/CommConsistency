@@ -94,7 +94,7 @@ public class TableGenerator {
 
 	}
 	
-	public static void main(String[] args) {
+	public static void main3(String[] args) {
 		MongoDatabase database = new MongoClient("192.168.1.128", 27017).getDatabase("sourcebase");
 		MongoCollection<Document> scopeComments = database.getCollection("comment_scope");
 		
@@ -108,6 +108,25 @@ public class TableGenerator {
 			doc.put("comment_id", id);
 			scopeComments.replaceOne(query,doc);
 			id++;
+		}
+	}
+	
+	public static void main(String[] args) {
+		MongoDatabase database1 = new MongoClient("192.168.1.128", 27017).getDatabase("sourcebase");
+		MongoCollection<Document> scopeComments1 = database1.getCollection("comment_scope");
+		
+		MongoDatabase database2 = new MongoClient("39.108.99.24", 27017).getDatabase("sourcebase");
+		MongoCollection<Document> scopeComments2 = database2.getCollection("comment_scope");
+		
+		MongoCursor<Document> cursor = scopeComments1.find().iterator();
+		while(cursor.hasNext()) {
+			Document doc = cursor.next();
+			List<Integer> verifyScopeEndLine = new ArrayList<Integer>();
+			doc.put("vscope_end_line", verifyScopeEndLine);
+			BasicDBObject query = new BasicDBObject();
+			query.put("comment_id", doc.get("comment_id"));
+			scopeComments1.replaceOne(query, doc);
+			scopeComments2.insertOne(doc);
 		}
 	}
 
