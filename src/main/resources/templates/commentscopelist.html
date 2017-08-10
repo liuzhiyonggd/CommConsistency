@@ -80,7 +80,7 @@
                             </div>
                             <div class="block-content collapse in">
                                     
-  									<table class="table table-striped table-bordered" id="example">
+  									<table class="table table-striped" id="commentlisttable">
 										<thead>
 											<tr>
 												<th>Project</th>
@@ -98,6 +98,12 @@
 											</tr>
 										</tbody>
 									</table>
+									<ul class="pager">
+									    <li class="next"><a th:href="@{/commentscopelist(pageno=${pageno+1},pagesize=20)}">Next &rarr;</a></li>
+									    <li class="previous"><label th:text="${pageno}"></label></li>
+                                        <li class="next"><a th:href="@{/commentscopelist(pageno=${pageno-1},pagesize=20)}">&larr; Privious</a></li>
+    
+                                    </ul>
                                 </div>
                         </div>
                         <!-- /block -->

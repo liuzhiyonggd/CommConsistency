@@ -8,6 +8,9 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,6 +22,7 @@ import commconsistency.dao.CommentScopeRepository;
 import commconsistency.domain.CommentScope;
 import commconsistency.domain.Line;
 import commconsistency.dto.CommentScopeDto;
+import commconsistency.utils.SpringDataPageable;
 
 @Controller
 public class CommentScopeController {
@@ -28,13 +32,29 @@ public class CommentScopeController {
 
 	// commentscope list 展示
 	@RequestMapping("/commentscopelist")
-	public String commentScopeList(Model model) {
+	public String commentScopeList(@RequestParam("pageno") int pageNo,@RequestParam("pagesize") int pageSize,  Model model) {
+		if(pageNo<=1) {
+			pageNo = 1;
+		}
 		// 获取数据库中所有的数据，该部分需要修改，改成分页调用
-		List<CommentScope> commentScopeList = commentScopeRepository.findAll();
+		SpringDataPageable pageable = new SpringDataPageable();  
+		//每页显示条数  
+		pageable.setPagesize(pageSize);  
+		//当前页  
+		pageable.setPagenumber(pageNo);  
+		Page<CommentScope> page = commentScopeRepository.findByVerifyScopeEndLineList(null, pageable);  
+		
+		if(page.isLast()) {
+			pageNo = pageNo-1;
+		}
+		
 		List<CommentScopeDto> commentList = new ArrayList<CommentScopeDto>();
 
 		// 将获取到的数据表重新打包成更小结构的DTO对象，传送给页面展示
-		for (CommentScope commentScope : commentScopeList) {
+		Iterator<CommentScope> iter = page.iterator();
+		
+		while(iter.hasNext()) {
+			CommentScope commentScope = iter.next();
 			CommentScopeDto comment = new CommentScopeDto();
 			comment.setCommentID(commentScope.getCommentID());
 			comment.setProject(commentScope.getProject());
@@ -46,6 +66,7 @@ public class CommentScopeController {
 			commentList.add(comment);
 		}
 		model.addAttribute("commentscopelist", commentList);
+		model.addAttribute("pageno",pageNo);
 		return "commentscopelist";
 	}
 
