@@ -55,7 +55,7 @@
                                 <a href="/">Home</a>
                             </li>
                             <li class="active">
-                                <a href="/commentscopelist">Comment Scope</a>
+                                <a href="/commentscopelist?pageno=1&amp;pagesize=20">Comment Scope</a>
                             </li>
                                     
                             <li>
@@ -87,7 +87,7 @@
                                              
                                         </pre>
                                         <div class="form-actions" style="align-content: flex-start;">
-                                        <input class="input-xlarge focused" th:field="*{scopeEndLine}" type="text" value="input end line..." onClick="Cleartext(this.id)"/>
+                                        Scope End Line: <input class="input-xlarge focused" th:field="*{scopeEndLine}" type="text" onClick="Cleartext(this.id)"/>
                                           <button type="submit" class="btn btn-primary">Save</button>
                                           
                                         </div>

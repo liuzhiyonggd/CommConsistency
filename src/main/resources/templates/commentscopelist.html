@@ -99,9 +99,10 @@
 										</tbody>
 									</table>
 									<ul class="pager">
-									    <li class="next"><a th:href="@{/commentscopelist(pageno=${pageno+1},pagesize=20)}">Next &rarr;</a></li>
-									    <li class="previous"><label th:text="${pageno}"></label></li>
-                                        <li class="next"><a th:href="@{/commentscopelist(pageno=${pageno-1},pagesize=20)}">&larr; Privious</a></li>
+									<li class="previous"><a th:href="@{/commentscopelist(pageno=${pageno-1},pagesize=20)}">&larr; Privious</a></li>
+									<li class="next" th:text="${'page '+pageno}">  </li>
+									<li class="next"><a th:href="@{/commentscopelist(pageno=${pageno+1},pagesize=20)}">Next &rarr;</a></li>
+									    
     
                                     </ul>
                                 </div>

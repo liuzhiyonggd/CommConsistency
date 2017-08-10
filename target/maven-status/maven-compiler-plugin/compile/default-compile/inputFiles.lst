@@ -1,0 +1,13 @@
+/home/angel/git/CommConsistency/src/main/java/commconsistency/dao/CommentScopeRepository.java
+/home/angel/git/CommConsistency/src/main/java/commconsistency/web/CommentScopeController.java
+/home/angel/git/CommConsistency/src/main/java/commconsistency/refactor/abstracts/Refactor.java
+/home/angel/git/CommConsistency/src/main/java/commconsistency/web/WebConfig.java
+/home/angel/git/CommConsistency/src/main/java/commconsistency/refactor/rules/ExtractMethod.java
+/home/angel/git/CommConsistency/src/main/java/commconsistency/utils/SpringDataPageable.java
+/home/angel/git/CommConsistency/src/main/java/commconsistency/domain/CommentScope.java
+/home/angel/git/CommConsistency/src/main/java/commconsistency/utils/TableGenerator.java
+/home/angel/git/CommConsistency/src/main/java/commconsistency/dto/CommentScopeDto.java
+/home/angel/git/CommConsistency/src/main/java/commconsistency/Main.java
+/home/angel/git/CommConsistency/src/main/java/commconsistency/domain/Line.java
+/home/angel/git/CommConsistency/src/main/java/commconsistency/refactor/rules/RefactChange.java
+/home/angel/git/CommConsistency/src/main/java/commconsistency/web/HomeController.java
