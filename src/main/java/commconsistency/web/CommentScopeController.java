@@ -103,8 +103,13 @@ public class CommentScopeController {
 		int commentID = commentScopeDto.getCommentID();
 		int verifyScopeEndLine = commentScopeDto.getScopeEndLine();
 		CommentScope comment = commentScopeRepository.findByCommentID(commentID);
-		comment.getVerifyScopeEndLineList().add(verifyScopeEndLine);
-		
+		List<Integer> verifyScopeEndLineList = comment.getVerifyScopeEndLineList();
+		if(comment.getVerifyScopeEndLineList()==null) {
+			verifyScopeEndLineList = new ArrayList<Integer>();
+		}
+		verifyScopeEndLineList.add(verifyScopeEndLine);
+		comment.setVerifyScopeEndLineList(verifyScopeEndLineList);
+		commentScopeRepository.save(comment);
 		return new ModelAndView("redirect:/commentscopeview?commentID="+(commentID+1));
 	}
 }
