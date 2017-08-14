@@ -1,8 +1,11 @@
 package commconsistency.security;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import commconsistency.domain.User;
@@ -24,8 +27,12 @@ public class UserSecurity extends User implements UserDetails{
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
+		List<String> roles = this.getRoles();
+		for(String role:roles) {
+			auths.add(new SimpleGrantedAuthority(role));
+		}
+		return auths;
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,6 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     private UserDetailsService userDetailsService;//自定义用户服务
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception{
+    	auth.userDetailsService(userDetailsService);
     }
 	@Bean
     @Override
@@ -45,11 +47,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .formLogin()
                 //指定登录页是"/login"
                 .loginPage("/login")
-                .defaultSuccessUrl("/hello")//登录成功后默认跳转到"/hello"
+                .defaultSuccessUrl("/")//登录成功后默认跳转到主页
                 .permitAll()
                 .and()
                 .logout()
-                .logoutSuccessUrl("/home")//退出登录后的默认url是"/home"
+                .logoutSuccessUrl("/login")//退出登录后的默认为login
                 .permitAll();
 
     }
@@ -77,6 +79,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         //将验证过程交给自定义验证工具
         auth.authenticationProvider(provider);
+    }
+    
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+ 
+        web.ignoring().antMatchers("/assets/**","/images/**","/bootstrap/**","/vendors/**","/fonts/**");
     }
 
 
