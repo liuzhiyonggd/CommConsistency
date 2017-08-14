@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import commConsistency.service.CustomUserDetailsService;
+import commconsistency.service.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity

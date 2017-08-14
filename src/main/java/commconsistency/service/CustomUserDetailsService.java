@@ -1,4 +1,4 @@
-package commConsistency.service;
+package commconsistency.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
