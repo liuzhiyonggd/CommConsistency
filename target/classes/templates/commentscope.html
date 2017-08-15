@@ -10,6 +10,8 @@
 	media="screen" />
 <link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"
 	media="screen" />
+		<link href="bootstrap/css/bootstrapValidator.css" rel="stylesheet"
+	media="screen" />
 <link href="vendors/easypiechart/jquery.easy-pie-chart.css"
 	rel="stylesheet" media="screen" />
 <link href="assets/styles.css" rel="stylesheet" media="screen" />
@@ -101,7 +103,7 @@
                                              
                                         </pre>
 								<div class="form-actions" style="align-content: flex-start;">
-									Scope End Line: <input class="input-xlarge focused"
+									Scope End Line: <input class="form-controll" name="endline"
 										th:field="*{scopeEndLine}" type="text"
 										onClick="Cleartext(this.id)" />
 									<button type="submit" class="btn btn-primary">Save</button>
@@ -140,7 +142,7 @@
 		src="vendors/syntaxhighlighter/scripts/shCore.js"></script>
 	<script type="text/javascript"
 		src="vendors/syntaxhighlighter/scripts/shBrushJava.js"></script>
-
+    <script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
 	<script th:inline="javascript">
 	    document.getElementsByTagName('pre')[0].innerHTML = [[${comment.code}]]
 	    SyntaxHighlighter.defaults['first-line'] = [[${firstline}]]
