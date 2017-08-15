@@ -209,7 +209,7 @@
 						<span class="heading">User Sign in</span>
 						<fieldset>
 						<div class="form-group">
-							<input type="text" class="form-control" name="username" th:field="*{userName}"
+							<input type="text" class="form-control" name="userName" th:field="*{userName}"
 								placeholder="username" />
 
 						</div>
@@ -243,7 +243,7 @@ $(document).ready(function() {
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            username: {
+            userName: {
                 message: 'The username is not valid',
                 validators: {
                     notEmpty: {

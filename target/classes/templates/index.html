@@ -53,6 +53,14 @@
 											onclick="document.getElementById('_form2').submit();">Login</a>
 									</form>
 								</li>
+								
+								<li sec:authorize="hasRole('ROLE_ANONYMOUS')">
+									<form id="_form3" method="get" th:action="@{/signin}">
+										<input type="hidden" name="name" value="value" /> <a
+											tabindex="-1"
+											onclick="document.getElementById('_form3').submit();">Sign In</a>
+									</form>
+								</li>
 
 							</ul></li>
 					</ul>
