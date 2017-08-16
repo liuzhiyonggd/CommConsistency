@@ -18,13 +18,14 @@ import commconsistency.dao.CommentScopeRepository;
 import commconsistency.domain.CommentScope;
 import commconsistency.domain.Line;
 import commconsistency.dto.CommentScopeDto;
+import commconsistency.service.CommentScopeService;
 import commconsistency.utils.SpringDataPageable;
 
 @Controller
 public class CommentScopeController {
 
 	@Autowired
-	private CommentScopeRepository commentScopeRepository;
+	private CommentScopeService commentScopeService;
 
 	// commentscope list 展示
 	@RequestMapping("/commentscopelist")
@@ -38,7 +39,7 @@ public class CommentScopeController {
 		pageable.setPagesize(pageSize);  
 		//当前页  
 		pageable.setPagenumber(pageNo);  
-		Page<CommentScope> page = commentScopeRepository.findByVerifyScopeEndLineList(null, pageable);  
+		Page<CommentScope> page = commentScopeService.findByVerifyScopeEndLineList(null, pageable);  
 		
 		if(page.isLast()) {
 			pageNo = pageNo-1;
@@ -71,7 +72,7 @@ public class CommentScopeController {
 	public String commentScopeView(@RequestParam("commentID") String paramsStr, Model model) {
 
 		int commentID = Integer.parseInt(paramsStr);
-		CommentScope commentScope = commentScopeRepository.findByCommentID(commentID);
+		CommentScope commentScope = commentScopeService.findByCommentID(commentID);
 
 		// 将查找到的对象进行DTO对象转换，转换成更小的对象传递给页面展示
 		CommentScopeDto comment = new CommentScopeDto();
@@ -119,14 +120,14 @@ public class CommentScopeController {
 	public ModelAndView commentScopeSave(@ModelAttribute CommentScopeDto commentScopeDto,Model model) {
 		int commentID = commentScopeDto.getCommentID();
 		int verifyScopeEndLine = commentScopeDto.getScopeEndLine();
-		CommentScope comment = commentScopeRepository.findByCommentID(commentID);
+		CommentScope comment = commentScopeService.findByCommentID(commentID);
 		List<Integer> verifyScopeEndLineList = comment.getVerifyScopeEndLineList();
 		if(comment.getVerifyScopeEndLineList()==null) {
 			verifyScopeEndLineList = new ArrayList<Integer>();
 		}
 		verifyScopeEndLineList.add(verifyScopeEndLine);
 		comment.setVerifyScopeEndLineList(verifyScopeEndLineList);
-		commentScopeRepository.save(comment);
+		commentScopeService.save(comment);
 		return new ModelAndView("redirect:/commentscopeview?commentID="+(commentID+1));
 	}
 }
