@@ -5,12 +5,13 @@
 
 <head>
 <title>Comment Consistency</title>
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
 <!-- Bootstrap -->
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	media="screen" />
 <link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"
 	media="screen" />
-		<link href="bootstrap/css/bootstrapValidator.css" rel="stylesheet"
+<link href="bootstrap/css/bootstrapValidator.css" rel="stylesheet"
 	media="screen" />
 <link href="vendors/easypiechart/jquery.easy-pie-chart.css"
 	rel="stylesheet" media="screen" />
@@ -92,7 +93,7 @@
 				</div>
 				<div class="block-content collapse in">
 					<div class="span12">
-						<form class="form-horizontal" th:action="@{/save}"
+						<form id="commentForm" class="form-horizontal" th:action="@{/save}"
 							th:object="${comment}" method="post">
 							<fieldset>
 								<input style="display: none;" th:field="*{commentID}"
@@ -102,10 +103,10 @@
 								<pre class="brush:java;">
                                              
                                         </pre>
-								<div class="form-actions" style="align-content: flex-start;">
-									Scope End Line: <input class="form-controll" name="endline"
+								<div class="form-group" style="align-content: flex-start;">
+									Scope End Line: <input class="form-controll" name="scopeEndLine"
 										th:field="*{scopeEndLine}" type="text"
-										onClick="Cleartext(this.id)" />
+										/>
 									<button type="submit" class="btn btn-primary">Save</button>
 
 								</div>
@@ -142,7 +143,7 @@
 		src="vendors/syntaxhighlighter/scripts/shCore.js"></script>
 	<script type="text/javascript"
 		src="vendors/syntaxhighlighter/scripts/shBrushJava.js"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
+	<script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
 	<script th:inline="javascript">
 	    document.getElementsByTagName('pre')[0].innerHTML = [[${comment.code}]]
 	    SyntaxHighlighter.defaults['first-line'] = [[${firstline}]]
@@ -152,6 +153,47 @@
 	    function Cleartext(tname){
             var t=document.getElementById(tname).value="";
         }
+	    console.log("syntaxHighlighter run.");
+	</script>
+
+	<script th:inline="javascript">
+	var _endline = [[${comment.scopeEndLine}]];
+    var _firstline = [[${highlight[0]}]];
+	$(document).ready(function() {
+		
+	    $('#commentForm').bootstrapValidator({
+	        message: 'This value is not valid',
+	        feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        },
+	        fields: {
+	            scopeEndLine: {
+	                message: 'The endline is not valid',
+	                validators: {
+	                	notEmpty: {
+	                        message: 'The endline is required and can\'t be empty'
+	                    },
+	                    callback: {
+	                	    message: 'Wrong value,the endline must between comment line and last line',
+	                	    callback: function(value, validator) {
+	                	    	var b1=value>=_firstline;
+	                	    	var b2=_endline>=value;
+	                	    	if(b1){
+	                	    		if(b2){
+	                	    			return true;
+	                	    		}
+	                	    	}
+	                	    	return false;
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	        });
+	    console.log("run validator.");
+	    });
 	</script>
 </body>
 

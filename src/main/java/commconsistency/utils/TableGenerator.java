@@ -30,8 +30,6 @@ public class TableGenerator {
 		BasicDBObject query = new BasicDBObject();
 		query.put("project", "hibernate");
 
-		List<Document> commentScopeList = new ArrayList<Document>();
-
 		FindIterable<Document> iter = comments.find(query).limit(200);
 		MongoCursor<Document> cursor = iter.iterator();
 		while (cursor.hasNext()) {

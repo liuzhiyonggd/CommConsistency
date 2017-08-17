@@ -101,6 +101,7 @@ public class CommentScopeController {
 			builder.append(line.getLine().replace("<", "&lt;")).append("\r\n");
 		}
 		comment.setCode(builder.toString());
+		comment.setScopeEndLine(commentScope.getScopeEndLine());
 		model.addAttribute("comment", comment);
 
 		// firstline为SyntaxHighlighter 显示的第一行的行号

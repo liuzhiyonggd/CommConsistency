@@ -5,6 +5,7 @@
 
 <head>
 <title>Comment Consistency</title>
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
 <!-- Bootstrap -->
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	media="screen" />
@@ -104,7 +105,7 @@
 								<td th:text="${comment.commitID}">1</td>
 								<td th:text="${comment.className}">Main</td>
 								<td><a
-									th:href="@{/commentscopeview(commentID=${comment.commentID})}">View</a></td>
+									th:href="@{/commentscopeview(commentID=${comment.commentID})} " target="_blank">View</a></td>
 							</tr>
 						</tbody>
 					</table>
