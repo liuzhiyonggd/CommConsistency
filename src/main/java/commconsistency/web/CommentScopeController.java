@@ -20,9 +20,11 @@ import commconsistency.dao.CommentScopeRepository;
 import commconsistency.domain.CommentScope;
 import commconsistency.domain.EndLineVerify;
 import commconsistency.domain.Line;
+import commconsistency.domain.SubCommentScope;
 import commconsistency.dto.CommentScopeDto;
 import commconsistency.service.CommentScopeService;
 import commconsistency.service.EndLineVerifyService;
+import commconsistency.service.SubCommentScopeService;
 import commconsistency.utils.SpringDataPageable;
 
 @Controller
@@ -30,7 +32,8 @@ public class CommentScopeController {
 
 	@Autowired
 	private CommentScopeService commentScopeService;
-	
+	@Autowired
+	private SubCommentScopeService subCommentScopeService;
 	@Autowired
 	private EndLineVerifyService endLineVerifyService;
 
@@ -46,7 +49,9 @@ public class CommentScopeController {
 		pageable.setPagesize(pageSize);  
 		//当前页  
 		pageable.setPagenumber(pageNo);  
-		Page<CommentScope> page = commentScopeService.findByVerifyScopeEndLineList(null, pageable);  
+		
+		//使用数据量更小的表sub_comment_scope，加快读取速度
+		Page<SubCommentScope> page = subCommentScopeService.findByIsVerify(false, pageable);  
 		
 		if(page.isLast()) {
 			pageNo = pageNo-1;
@@ -55,16 +60,16 @@ public class CommentScopeController {
 		List<CommentScopeDto> commentList = new ArrayList<CommentScopeDto>();
 
 		// 将获取到的数据表重新打包成更小结构的DTO对象，传送给页面展示
-		Iterator<CommentScope> iter = page.iterator();
+		Iterator<SubCommentScope> iter = page.iterator();
 		
 		while(iter.hasNext()) {
-			CommentScope commentScope = iter.next();
+			SubCommentScope subCommentScope = iter.next();
 			CommentScopeDto comment = new CommentScopeDto();
-			comment.setCommentID(commentScope.getCommentID());
-			comment.setProject(commentScope.getProject());
-			String[] temps = commentScope.getCommitID().split(" ");
+			comment.setCommentID(subCommentScope.getCommentID());
+			comment.setProject(subCommentScope.getProject());
+			String[] temps = subCommentScope.getCommitID().split(" ");
 			comment.setCommitID(temps[temps.length - 2]);
-			temps = commentScope.getClassName().split("\\\\");
+			temps = subCommentScope.getClassName().split("\\\\");
 			temps = temps[temps.length - 1].split("\\.");
 			comment.setClassName(temps[0]);
 			commentList.add(comment);
@@ -150,6 +155,11 @@ public class CommentScopeController {
 		endLineVerify.setEndLine(verifyScopeEndLine);
 		endLineVerify.setCommentID(commentScopeDto.getCommentID());
 		endLineVerifyService.insert(endLineVerify);
+		
+		SubCommentScope subCommentScope = subCommentScopeService.findByCommentID(commentID);
+		subCommentScope.setVerify(true);
+		subCommentScopeService.save(subCommentScope);
+		
 		return new ModelAndView("redirect:/commentscopeview?commentID="+(commentID+1));
 	}
 }

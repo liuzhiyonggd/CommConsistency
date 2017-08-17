@@ -5,6 +5,8 @@ E:\git\CommConsistency\src\main\java\commconsistency\domain\Line.java
 E:\git\CommConsistency\src\main\java\commconsistency\refactor\rules\RefactChange.java
 E:\git\CommConsistency\src\main\java\commconsistency\service\CustomUserDetailsService.java
 E:\git\CommConsistency\src\main\java\commconsistency\web\CommentScopeController.java
+E:\git\CommConsistency\src\main\java\commconsistency\dao\SubCommentScopeRepository.java
+E:\git\CommConsistency\src\main\java\commconsistency\service\SubCommentScopeService.java
 E:\git\CommConsistency\src\main\java\commconsistency\web\WebConfig.java
 E:\git\CommConsistency\src\main\java\commconsistency\domain\User.java
 E:\git\CommConsistency\src\main\java\commconsistency\Main.java
@@ -19,6 +21,7 @@ E:\git\CommConsistency\src\main\java\commconsistency\service\CommentScopeService
 E:\git\CommConsistency\src\main\java\commconsistency\utils\SpringDataPageable.java
 E:\git\CommConsistency\src\main\java\commconsistency\utils\temp.java
 E:\git\CommConsistency\src\main\java\commconsistency\dao\DatabaseConfig.java
+E:\git\CommConsistency\src\main\java\commconsistency\domain\SubCommentScope.java
 E:\git\CommConsistency\src\main\java\commconsistency\security\WebSecurityConfig.java
 E:\git\CommConsistency\src\main\java\commconsistency\dao\UserRepository.java
 E:\git\CommConsistency\src\main\java\commconsistency\security\UserSecurity.java
