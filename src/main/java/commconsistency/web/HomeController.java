@@ -28,6 +28,13 @@ public class HomeController {
 	@RequestMapping(value="/signin",method=RequestMethod.POST)
 	public String signin(@ModelAttribute User user,Model model) {
 		
+		String username = user.getUserName();
+		if(userRepository.findByUserName(username)!=null) {
+			User t_user = new User();
+			model.addAttribute("user",t_user);
+			model.addAttribute("exist_username",true);
+			return "signin";
+		}
 		List<String> roles = new ArrayList<String>();
 		roles.add("USER");
 		user.setRoles(roles);
@@ -39,6 +46,7 @@ public class HomeController {
 	public String signin(Model model) {
 		User user = new User();
 		model.addAttribute("user",user);
+		model.addAttribute("exist_username",false);
 		return "signin";
 	}
 }

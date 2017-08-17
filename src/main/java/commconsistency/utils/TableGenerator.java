@@ -2,6 +2,7 @@ package commconsistency.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.bson.Document;
 import org.eclipse.jdt.core.dom.AST;
@@ -10,6 +11,10 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.internal.compiler.lookup.Scope;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
@@ -20,7 +25,12 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
 public class TableGenerator {
+	static Logger root = (Logger) LoggerFactory
+	        .getLogger(Logger.ROOT_LOGGER_NAME);
 
+	static {
+	    root.setLevel(Level.INFO);
+	}
 	public static void main2(String[] args) {
 		MongoDatabase database = new MongoClient("192.168.1.128", 27017).getDatabase("sourcebase");
 		MongoCollection<Document> classes = database.getCollection("class_message2");
@@ -28,16 +38,33 @@ public class TableGenerator {
 		MongoCollection<Document> scopeComments = database.getCollection("comment_scope");
 
 		BasicDBObject query = new BasicDBObject();
-		query.put("project", "hibernate");
+		query.put("project", "struts");
 
-		FindIterable<Document> iter = comments.find(query).limit(200);
+		FindIterable<Document> iter = comments.find(query).limit(500);
 		MongoCursor<Document> cursor = iter.iterator();
 		while (cursor.hasNext()) {
 			Document doc = cursor.next();
 			String project = doc.getString("project");
 			String commitID = doc.getString("commit_id");
 			String className = doc.getString("class_name");
-			System.out.println(project+":"+commitID+":"+className);
+			List<String> commentStrings = (List<String>)doc.get("old_comment");
+			List<String> codeStrings = (List<String>)doc.get("old_code");
+			
+			List<String> words = new ArrayList<String>();
+			String splitToken = " .,;:/&|`~%+=-*<>$#@!^\\()[]{}''\"\r\n\t";
+			for(String sentense:commentStrings) {
+			    StringTokenizer st = new StringTokenizer(sentense,splitToken,false);
+			    while(st.hasMoreTokens()) {
+			    	words.add(st.nextToken());
+			    }
+			}
+			if(words.size()<5) {
+				continue;
+			}
+			if(codeStrings.size()>30||codeStrings.size()<3) {
+				continue;
+			}
+			
 			int oldStartLine = doc.getInteger("old_scope_startline");
 			int oldEndLine = doc.getInteger("old_scope_endline");
 			BasicDBObject query2 = new BasicDBObject();
@@ -47,6 +74,7 @@ public class TableGenerator {
 			Document clazz = classes.find(query2).first();
 
 			List<Document> codes = (List<Document>) clazz.get("old_code");
+			
 			StringBuilder sb = new StringBuilder();
 			for (Document code : codes) {
 				String str = code.getString("line");
@@ -85,7 +113,8 @@ public class TableGenerator {
 			scopeDocument.put("comment_start_line", doc.get("old_comment_startline"));
 			scopeDocument.put("comment_end_line", doc.get("old_comment_endline"));
 			scopeDocument.put("codes", codes);
-			
+			List<Integer> verifyScopeEndLine = new ArrayList<Integer>();
+			scopeDocument.put("vscope_end_line", verifyScopeEndLine);
 			scopeComments.insertOne(scopeDocument);
 
 		}
@@ -119,11 +148,6 @@ public class TableGenerator {
 		MongoCursor<Document> cursor = scopeComments1.find().iterator();
 		while(cursor.hasNext()) {
 			Document doc = cursor.next();
-			List<Integer> verifyScopeEndLine = new ArrayList<Integer>();
-			doc.put("vscope_end_line", verifyScopeEndLine);
-			BasicDBObject query = new BasicDBObject();
-			query.put("comment_id", doc.get("comment_id"));
-			scopeComments1.replaceOne(query, doc);
 			scopeComments2.insertOne(doc);
 		}
 	}

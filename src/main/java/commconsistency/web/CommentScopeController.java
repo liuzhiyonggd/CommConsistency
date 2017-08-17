@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,9 +18,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import commconsistency.dao.CommentScopeRepository;
 import commconsistency.domain.CommentScope;
+import commconsistency.domain.EndLineVerify;
 import commconsistency.domain.Line;
 import commconsistency.dto.CommentScopeDto;
 import commconsistency.service.CommentScopeService;
+import commconsistency.service.EndLineVerifyService;
 import commconsistency.utils.SpringDataPageable;
 
 @Controller
@@ -26,6 +30,9 @@ public class CommentScopeController {
 
 	@Autowired
 	private CommentScopeService commentScopeService;
+	
+	@Autowired
+	private EndLineVerifyService endLineVerifyService;
 
 	// commentscope list 展示
 	@RequestMapping("/commentscopelist")
@@ -73,6 +80,10 @@ public class CommentScopeController {
 
 		int commentID = Integer.parseInt(paramsStr);
 		CommentScope commentScope = commentScopeService.findByCommentID(commentID);
+		while(commentScope==null) {
+			commentID++;
+			commentScope = commentScopeService.findByCommentID(commentID);
+		}
 
 		// 将查找到的对象进行DTO对象转换，转换成更小的对象传递给页面展示
 		CommentScopeDto comment = new CommentScopeDto();
@@ -129,6 +140,16 @@ public class CommentScopeController {
 		verifyScopeEndLineList.add(verifyScopeEndLine);
 		comment.setVerifyScopeEndLineList(verifyScopeEndLineList);
 		commentScopeService.save(comment);
+		EndLineVerify endLineVerify = new EndLineVerify();
+		
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()  
+			    .getAuthentication()  
+			    .getPrincipal(); 
+		
+		endLineVerify.setUserName(userDetails.getUsername());
+		endLineVerify.setEndLine(verifyScopeEndLine);
+		endLineVerify.setCommentID(commentScopeDto.getCommentID());
+		endLineVerifyService.insert(endLineVerify);
 		return new ModelAndView("redirect:/commentscopeview?commentID="+(commentID+1));
 	}
 }
