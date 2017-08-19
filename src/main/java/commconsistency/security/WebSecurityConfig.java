@@ -48,6 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 //指定登录页是"/login"
                 .loginPage("/login")
                 .defaultSuccessUrl("/")//登录成功后默认跳转到主页
+                .successForwardUrl("/")
                 .permitAll()
                 .and()
                 .logout()

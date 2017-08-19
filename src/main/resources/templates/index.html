@@ -38,11 +38,11 @@
 						</a>
 							<ul class="dropdown-menu">
 
-								<li>
+								<li sec:authorize="hasRole('ROLE_USER')">
 									<form id="_form1" method="post" th:action="@{/logout}">
 										<input type="hidden" name="name" value="value" /> <a
 											tabindex="-1"
-											onclick="document.getElementById('_form1').submit();">Logout</a>
+											onclick="document.getElementById('_form1').submit();" href="#">Logout</a>
 									</form>
 								</li>
 
@@ -51,7 +51,7 @@
 									<form id="_form2" method="get" th:action="@{/login}">
 										<input type="hidden" name="name" value="value" /> <a
 											tabindex="-1"
-											onclick="document.getElementById('_form2').submit();">Login</a>
+											onclick="document.getElementById('_form2').submit();" href="#">Login</a>
 									</form>
 								</li>
 								
@@ -59,7 +59,7 @@
 									<form id="_form3" method="get" th:action="@{/signin}">
 										<input type="hidden" name="name" value="value" /> <a
 											tabindex="-1"
-											onclick="document.getElementById('_form3').submit();">Sign In</a>
+											onclick="document.getElementById('_form3').submit();" href="#">Sign In</a>
 									</form>
 								</li>
 
@@ -91,7 +91,7 @@
 						<div class="navbar navbar-inner block-header">
 							<div class="muted pull-left">Statistics</div>
 							<div class="pull-right">
-								<span class="badge badge-warning">View More</span>
+								<span class="badge badge-warning"><a href="#">View More</a></span>
 
 							</div>
 						</div>

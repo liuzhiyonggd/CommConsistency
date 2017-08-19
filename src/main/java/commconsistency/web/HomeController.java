@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -48,5 +50,17 @@ public class HomeController {
 		model.addAttribute("user",user);
 		model.addAttribute("exist_username",false);
 		return "signin";
+	}
+	
+	@RequestMapping(value="/login",method=RequestMethod.GET)
+	public String login(Model model) {
+		if(SecurityContextHolder.getContext()  
+			    .getAuthentication()  
+			    .getPrincipal() instanceof UserDetails) {
+		
+			return "index";
+		}else {
+			return "login";
+		}
 	}
 }
