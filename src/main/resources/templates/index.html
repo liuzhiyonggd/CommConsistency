@@ -67,8 +67,19 @@
 					</ul>
 					<ul class="nav">
 						<li class="active"><a href="/">Home</a></li>
-						<li><a href="/commentscopelist?pageno=1&amp;pagesize=20">Comment
-								Scope</a></li>
+						 <li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">CommentScope <b class="caret"></b>
+
+                                </a>
+                                <ul class="dropdown-menu" id="menu1">
+                                    <li>
+                                        <a th:href="@{/commentscopelist_view(pageno=1,pagesize=20)}">View</a>
+                                    </li>
+                                    <li>
+                                        <a th:href="@{/commentscopelist_verification(pageno=1,pagesize=20)}">Verification</a>
+                                    </li>
+                                </ul>
+                            </li>
 
 						<li><a href="#">Code Refactor</a></li>
 						<li><a href="#">Comment Consistency</a></li>
