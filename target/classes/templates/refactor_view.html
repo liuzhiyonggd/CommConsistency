@@ -94,7 +94,6 @@
 			</div>
 		</div>
 	</div>
-	<div class="container">
 		<div class="row-fluid">
 			<!-- block -->
 			<div class="block">
@@ -102,20 +101,38 @@
 					<div class="muted pull-left">Code View</div>
 				</div>
 				<div class="block-content collapse in">
-					<div class="span12">
-						<form id="commentForm" class="form-horizontal" th:action="@{/save}"
+					<div class="span6" style="background-color: red;overflow: scroll;">
+						<form id="commentForm" class="span12" style="background-color: green;" th:action="@{/save}"
 							th:object="${comment}" method="post">
 							<fieldset>
 								<input style="display: none;" th:field="*{commentID}"
 									th:value="${comment.commentID}" />
 								<legend
 									th:text="${comment.project+' '+comment.commitID+'  '+comment.className}"></legend>
-								<pre class="brush:java;">
+								<div class="span12">
+								<pre id="code1">
                                              
                                         </pre>
-								
+								</div>
 							</fieldset>
 						</form>
+						</div>
+						<div class="span6" style="background-color: blue;overflow:scroll;">
+						<form id="commentForm" class="span12" style="background-color: orange;" th:action="@{/save}"
+							th:object="${comment}" method="post">
+							<fieldset>
+								<input style="display: none;" th:field="*{commentID}"
+									th:value="${comment.commentID}" />
+								<legend
+									th:text="${comment.project+' '+comment.commitID+'  '+comment.className}"></legend>
+								<div class="span12">
+								<pre id="code2">
+                                             
+                                        </pre>
+								</div>
+							</fieldset>
+						</form>
+						</div>
 						<ul class="pager">
 						<li class="previous"><a
 							th:href="@{/commentscopeview(commentID=${comment.commentID-1},isNext=false)}">&larr;
@@ -127,13 +144,11 @@
 
 					</ul>
 
-					</div>
 				</div>
 			</div>
 			<!-- /block -->
 		</div>
 
-	</div>
 
 	<script src="vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 	<script src="vendors/jquery-1.9.1.js"></script>
@@ -159,11 +174,15 @@
 		src="vendors/syntaxhighlighter/scripts/shBrushJava.js"></script>
 	<script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
 	<script th:inline="javascript">
-	    document.getElementsByTagName('pre')[0].innerHTML = [[${comment.code}]]
-	    SyntaxHighlighter.defaults['first-line'] = [[${firstline}]]
-	    SyntaxHighlighter.defaults['highlight'] = [[${highlight}]]
-	    SyntaxHighlighter.all()
-	    
+	    var pre1 = document.getElementById('code1');
+	    var pre2 = document.getElementById('code2');
+	    pre1.innerHTML = [[${comment.code}]];
+	    pre2.innerHTML = [[${comment.code}]];
+	    var class1Value = 'brush:java;highlight:['+[[${highlight}]]+"];first-line:"+[[${firstline}]];
+	    pre1.setAttribute("class",class1Value);
+	    var class2Value = 'brush:java;highlight:['+[[${highlight}]]+"];first-line:"+[[${firstline}]];
+	    pre2.setAttribute("class",class2Value);
+	    SyntaxHighlighter.all();
 	    function Cleartext(tname){
             var t=document.getElementById(tname).value="";
         }

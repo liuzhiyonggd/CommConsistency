@@ -50,6 +50,7 @@
   font-size: 1em !important;
   min-height: inherit !important;
   min-height: auto !important;
+  word-break: break-all; 
 }
 
 .syntaxhighlighter {
@@ -69,7 +70,7 @@
   font-style: italic !important;
 }
 .syntaxhighlighter .line {
-  white-space: pre !important;
+ /* white-space: pre !important;*/
 }
 .syntaxhighlighter table {
   width: 100% !important;
