@@ -2,8 +2,10 @@ package commconsistency.web;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -127,9 +129,11 @@ public class CommentScopeController {
 
 		int commentID = Integer.parseInt(paramsStr);
 		CommentScope commentScope = commentScopeService.findByCommentID(commentID);
-		while(commentScope==null) {
-			commentID++;
+		EndLineVerify verify = endLineVerifyService.findByCommentID(commentID);
+		while(commentScope==null&&verify!=null) {
+			commentID = nextCommentID(commentID);
 			commentScope = commentScopeService.findByCommentID(commentID);
+			endLineVerifyService.findByCommentID(commentID);
 		}
 
 		// 将查找到的对象进行DTO对象转换，转换成更小的对象传递给页面展示
@@ -174,6 +178,27 @@ public class CommentScopeController {
 		model.addAttribute("highlight", highlightNums);
 		return "commentscope_verification";
 	}
+	
+	private int nextCommentID(int commentID) {
+		int nextCommentID = commentID;
+		if((commentID>=111182&&commentID<111686)||(commentID>=114674&&commentID<115179)
+				||(commentID>=122577&&commentID<123077)||(commentID>=124859&&commentID<125369)) {
+			nextCommentID++;
+		}
+		else if(commentID<111182){
+			nextCommentID = 111182;
+		}else if(commentID>=111686&&commentID<114674) {
+			nextCommentID = 114674;
+		}else if(commentID>=115179&&commentID<122577) {
+			nextCommentID = 122577;
+		}else if(commentID>=123077&&commentID<124859) {
+			nextCommentID = 124859;
+		}else if(commentID>=125369){
+			nextCommentID = 111182;
+		}
+		return nextCommentID;
+	}
+	
 	
 	// 根据用户传递回来的commentID查找表，返回该comment的详细信息。
 		@RequestMapping("/commentscopeview")
