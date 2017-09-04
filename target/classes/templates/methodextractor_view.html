@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	class="no-js">
+
+<head>
+<title>MethodExtracted Refactor</title>
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
+<!-- Bootstrap -->
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	media="screen" />
+<link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"
+	media="screen" />
+<link href="bootstrap/css/bootstrapValidator.css" rel="stylesheet"
+	media="screen" />
+<link href="vendors/easypiechart/jquery.easy-pie-chart.css"
+	rel="stylesheet" media="screen" />
+<link href="assets/styles.css" rel="stylesheet" media="screen" />
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+<!--/.fluid-container-->
+<link href="vendors/datepicker.css" rel="stylesheet" media="screen" />
+<link href="vendors/uniform.default.css" rel="stylesheet" media="screen" />
+<link href="vendors/chosen.min.css" rel="stylesheet" media="screen" />
+<link href="vendors/wysiwyg/bootstrap-wysihtml5.css" rel="stylesheet"
+	media="screen" />
+<!-- syntaxHighlighter -->
+<link href="vendors/syntaxhighlighter/styles/shCore.css"
+	rel="stylesheet" />
+<link href="vendors/syntaxhighlighter/styles/shCoreEclipse.css"
+	rel="stylesheet" />
+</head>
+
+<body>
+
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse"
+					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span>
+				</a> <a class="brand" href="#">Comment Consistency</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav pull-right">
+						<li class="dropdown"><a href="#" role="button"
+							class="dropdown-toggle" data-toggle="dropdown"> <label
+								sec:authentication="name"></label><i class="caret"></i>
+
+						</a>
+							<ul class="dropdown-menu">
+								<li>
+									<form id="_form1" method="post" th:action="@{/logout}">
+										<input type="hidden" name="name" value="value" /> <a
+											tabindex="-1"
+											onclick="document.getElementById('_form1').submit();">Logout</a>
+									</form>
+								</li>
+
+
+								<li sec:authorize="hasRole('ROLE_ANONYMOUS')">
+									<form id="_form2" method="get" th:action="@{/login}">
+										<input type="hidden" name="name" value="value" /> <a
+											tabindex="-1"
+											onclick="document.getElementById('_form2').submit();">Login</a>
+									</form>
+								</li>
+
+							</ul></li>
+					</ul>
+					<ul class="nav">
+						<li><a href="/">Home</a></li>
+						<li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">CommentScope <b class="caret"></b>
+
+                                </a>
+                                <ul class="dropdown-menu" id="menu1">
+                                    <li>
+                                        <a th:href="@{/commentscopelist_view(pageno=1,pagesize=20)}">View</a>
+                                    </li>
+                                    <li>
+                                        <a th:href="@{/commentscopelist_verification(pageno=1,pagesize=20)}">Verification</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+						<li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">CodeRefactor <b class="caret"></b>
+
+                                </a>
+                                <ul class="dropdown-menu" id="menu1">
+                                    <li>
+                                        <a th:href="@{/methodextractorlist(pageno=1,pagesize=20)}">MethodExtract</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">other</a>
+                                    </li>
+                                </ul>
+                            </li>
+						<li><a href="#">Comment Consistency</a></li>
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+	
+		<div class="row-fluid">
+		   
+			<!-- block -->
+			<div class="block">
+				<div class="navbar navbar-inner block-header">
+					<div class="muted pull-left">Code View</div>
+					<div class="muted pull-right" th:value="${methodextractor.methodExtractorId}"></div>
+				</div>
+				<div class="block-content collapse in">
+					<div class="span6" style="height:600px;overflow: scroll;">
+						<form id="commentForm" class="span12"
+							th:object="${methodextractor}" method="post">
+							<fieldset>
+								<input style="display: none;" th:field="*{project}"
+									th:value="${methodextractor.project}" />
+									<input style="display: none;" th:field="*{commitID}"
+									th:value="${methodextractor.commitID}" />
+									<input style="display: none;" th:field="*{className}"
+									th:value="${methodextractor.className}" />
+								<legend
+									th:text="${methodextractor.project+' '+' :old'}"></legend>
+								<div class="span12">
+								<pre id="code1">
+                                             
+                                        </pre>
+								</div>
+							</fieldset>
+						</form>
+						</div>
+						<div class="span6" style="overflow: scroll;height:600px" >
+						<form id="commentForm2" class="span12"
+							th:object="${methodextractor}" method="post">
+							<fieldset>
+								<input style="display: none;" th:field="*{project}"
+									th:value="${methodextractor.project}" />
+									<input style="display: none;" th:field="*{commitID}"
+									th:value="${methodextractor.commitID}" />
+									<input style="display: none;" th:field="*{className}"
+									th:value="${methodextractor.className}" />
+								<legend
+									th:text="${methodextractor.project+' '+' :new'}"></legend>
+								<div class="span12">
+								<pre id="code2">
+                                             
+                                        </pre>
+								</div>
+							</fieldset>
+						</form>
+						</div>
+						
+
+				</div>
+			</div>
+			<form action="" style="text-align: center;">
+			    <label>IsRefactor</label>
+			    <input type="button" value="YES"/>
+			    <input type="button" value="NO"/>
+			</form>
+			<!-- /block -->
+			</div>
+			
+
+
+	<script src="vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+	<script src="vendors/jquery-1.9.1.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<script src="vendors/jquery.uniform.min.js"></script>
+	<script src="vendors/chosen.jquery.min.js"></script>
+	<script src="vendors/bootstrap-datepicker.js"></script>
+
+	<script src="vendors/wysiwyg/wysihtml5-0.3.0.js"></script>
+	<script src="vendors/wysiwyg/bootstrap-wysihtml5.js"></script>
+
+	<script src="vendors/wizard/jquery.bootstrap.wizard.min.js"></script>
+
+	<script type="text/javascript"
+		src="vendors/jquery-validation/dist/jquery.validate.min.js"></script>
+	<script src="assets/form-validation.js"></script>
+
+	<script src="assets/scripts.js"></script>
+	<!-- syntaxHighlighter -->
+	<script type="text/javascript"
+		src="vendors/syntaxhighlighter/scripts/shCore.js"></script>
+	<script type="text/javascript"
+		src="vendors/syntaxhighlighter/scripts/shBrushJava.js"></script>
+	<script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
+	<script th:inline="javascript">
+	    var pre1 = document.getElementById('code1');
+	    var pre2 = document.getElementById('code2');
+	    pre1.innerHTML = [[${methodextractor.oldCode}]];
+	    pre2.innerHTML = [[${methodextractor.newCode}]];
+	    var class1Value = 'brush:java;highlight:['+[[${oldhighlight}]]+"];";
+	    pre1.setAttribute("class",class1Value);
+	    var class2Value = 'brush:java;highlight:['+[[${newhighlight}]]+"];";
+	    pre2.setAttribute("class",class2Value);
+	    SyntaxHighlighter.all();
+	    function Cleartext(tname){
+            var t=document.getElementById(tname).value="";
+        }
+	    console.log("syntaxHighlighter run.");
+	</script>
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		function yes(){
+	    	 window.location.href="/methodextractor/save?varify=yes&id="+[[${methodextractor.methodExtractorId}]];
+	    } 
+	/*]]>*/
+	    
+	</script>
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		function no(){
+	    	 window.location.href="/methodextractor/save?varify=no&id="+[[${methodextractor.methodExtractorId}]];
+	    } 
+	/*]]>*/
+	</script>
+
+</body>
+
+</html>

@@ -81,7 +81,19 @@
                                 </ul>
                             </li>
 
-						<li><a href="#">Code Refactor</a></li>
+						<li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">CodeRefactor <b class="caret"></b>
+
+                                </a>
+                                <ul class="dropdown-menu" id="menu1">
+                                    <li>
+                                        <a th:href="@{/methodextractorlist(pageno=1,pagesize=20)}">MethodExtract</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">other</a>
+                                    </li>
+                                </ul>
+                            </li>
 						<li><a href="#">Comment Consistency</a></li>
 					</ul>
 				</div>

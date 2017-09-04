@@ -20,11 +20,16 @@ import commconsistency.dao.CommentScopeRepository;
 import commconsistency.domain.CommentScope;
 import commconsistency.domain.EndLineVerify;
 import commconsistency.domain.Line;
+import commconsistency.domain.MethodExtractor;
 import commconsistency.domain.SubCommentScope;
+import commconsistency.domain.SubMethodExtractor;
 import commconsistency.dto.CommentScopeDto;
+import commconsistency.dto.MethodExtractorDto;
 import commconsistency.service.CommentScopeService;
 import commconsistency.service.EndLineVerifyService;
+import commconsistency.service.MethodExtractorService;
 import commconsistency.service.SubCommentScopeService;
+import commconsistency.service.SubMethodExtractorService;
 import commconsistency.utils.SpringDataPageable;
 
 @Controller
@@ -36,10 +41,16 @@ public class RefactorController {
 	private SubCommentScopeService subCommentScopeService;
 	@Autowired
 	private EndLineVerifyService endLineVerifyService;
+	
+	@Autowired
+	private MethodExtractorService methodExtractorService;
+	
+	@Autowired
+	private SubMethodExtractorService subMethodExtractorService;
 
 	// commentscope list(未验证) 展示
-	@RequestMapping("/refactorlist")
-	public String commentScopeListVerification(@RequestParam("pageno") int pageNo,@RequestParam("pagesize") int pageSize,  Model model) {
+	@RequestMapping("/methodextractorlist")
+	public String methodExtractor(@RequestParam("pageno") int pageNo,@RequestParam("pagesize") int pageSize,  Model model) {
 		if(pageNo<=1) {
 			pageNo = 1;
 		}
@@ -50,105 +61,78 @@ public class RefactorController {
 		//当前页  
 		pageable.setPagenumber(pageNo);  
 		
-		//使用数据量更小的表sub_comment_scope，加快读取速度
-		Page<SubCommentScope> page = subCommentScopeService.findByIsVerify(false, pageable);  
+		Page<SubMethodExtractor> page = subMethodExtractorService.findAll(pageable); 
 		
 		if(page.isLast()) {
 			pageNo = pageNo-1;
 		}
 		
-		List<CommentScopeDto> commentList = new ArrayList<CommentScopeDto>();
+		List<SubMethodExtractor> methodExtractorList = new ArrayList<SubMethodExtractor>();
 
-		// 将获取到的数据表重新打包成更小结构的DTO对象，传送给页面展示
-		Iterator<SubCommentScope> iter = page.iterator();
+		Iterator<SubMethodExtractor> iter = page.iterator();
 		
 		while(iter.hasNext()) {
-			SubCommentScope subCommentScope = iter.next();
-			CommentScopeDto comment = new CommentScopeDto();
-			comment.setCommentID(subCommentScope.getCommentID());
-			comment.setProject(subCommentScope.getProject());
-			String[] temps = subCommentScope.getCommitID().split(" ");
-			comment.setCommitID(temps[temps.length - 2]);
-			temps = subCommentScope.getClassName().split("\\\\");
+			SubMethodExtractor methodExtractor = iter.next();
+			String[] temps = methodExtractor.getCommitID().split(" ");
+			methodExtractor.setCommitID2(temps[temps.length - 2]);
+			temps = methodExtractor.getClassName().split("\\\\");
 			temps = temps[temps.length - 1].split("\\.");
-			comment.setClassName(temps[0]);
-			commentList.add(comment);
+			methodExtractor.setClassName2(temps[0]);
+			methodExtractorList.add(methodExtractor);
+			
 		}
-		model.addAttribute("commentscopelist", commentList);
+		model.addAttribute("methodextractorlist", methodExtractorList);
 		model.addAttribute("pageno",pageNo);
-		return "refactor_list";
+		return "methodextractor_list";
 	}
 	
 	
 	
 	// 根据用户传递回来的commentID查找表，返回该comment的详细信息。
-		@RequestMapping("/refactorview")
-		public String commentScopeView(@RequestParam("commentID") String paramsStr,@RequestParam("isNext") String isNext, Model model) {
-
-			int commentID = Integer.parseInt(paramsStr);
+		@RequestMapping("/methodextractorview")
+		public String methodExtractorView(@RequestParam("id") String id,Model model) {
+             
+			MethodExtractor methodExtractor = methodExtractorService.findByMethodExtractorId(Integer.parseInt(id));
+			MethodExtractorDto methodExtractorDto = new MethodExtractorDto();
+			methodExtractorDto.setMethodExtractorId(methodExtractor.getMethodExtractorId());;
+			methodExtractorDto.setProject(methodExtractor.getProject());
+			methodExtractorDto.setCommitID(methodExtractor.getCommitID());
+			methodExtractorDto.setClassName(methodExtractor.getClassName());
+			methodExtractorDto.setOldStartLine(methodExtractor.getOldStartLine());
+			methodExtractorDto.setOldEndLine(methodExtractor.getOldEndLine());
+			methodExtractorDto.setNewStartLine(methodExtractor.getNewStartLine());
+			methodExtractorDto.setNewEndLine(methodExtractor.getNewEndLine());
+			methodExtractorDto.setLocations(methodExtractor.getLocations());
 			
-			int minCommentID = 124860;
-			int maxCommentID = 125074;
-			if(commentID<minCommentID) {
-				commentID = 124860;
+			List<String> oldCodes = methodExtractor.getOldCodeList();
+			StringBuilder sb = new StringBuilder();
+			for(String str:oldCodes) {
+				sb.append(str.replace("<", "&lt;")).append("\r\n");
 			}
-			if(commentID>maxCommentID) {
-				commentID = 125074;
+			methodExtractorDto.setOldCode(sb.toString());
+			
+			List<String> newCodes = methodExtractor.getNewCodeList();
+			sb = new StringBuilder();
+			for(String str:newCodes) {
+				sb.append(str.replace("<", "&lt;")).append("\r\n");
 			}
-		
-			EndLineVerify endLineVerify = endLineVerifyService.findByCommentID(commentID);
-			while(endLineVerify==null) {
-				if(isNext.equals("true")) {
-				    commentID++;
-				    endLineVerify = endLineVerifyService.findByCommentID(commentID);
-				}else {
-					commentID--;
-					endLineVerify = endLineVerifyService.findByCommentID(commentID);
-				}
+			methodExtractorDto.setNewCode(sb.toString());
+			model.addAttribute("methodextractor", methodExtractorDto);
+			int[] oldHighLight = new int[methodExtractorDto.getOldEndLine()-methodExtractorDto.getOldStartLine()+1];
+			for(int i=methodExtractorDto.getOldStartLine();i<=methodExtractorDto.getOldEndLine();i++) {
+				oldHighLight[i-methodExtractorDto.getOldStartLine()] = i;
 			}
-
-			CommentScope commentScope = commentScopeService.findByCommentID(commentID);
-			// 将查找到的对象进行DTO对象转换，转换成更小的对象传递给页面展示
-			CommentScopeDto comment = new CommentScopeDto();
-			comment.setCommentID(commentScope.getCommentID());
-			comment.setProject(commentScope.getProject());
-			String[] temps = commentScope.getCommitID().split(" ");
-			comment.setCommitID(temps[temps.length - 2]);
-			temps = commentScope.getClassName().split("\\\\");
-			temps = temps[temps.length - 1].split("\\.");
-			comment.setClassName(temps[0]);
-
-			// 将源代码转换成可以在SyntaxHighlighter中显示的字符串，并保存在Model中。
-			StringBuilder builder = new StringBuilder();
-			Iterator<Line> iter = commentScope.getCodeList().iterator();
-			int i = 0;
-			while (iter.hasNext()) {
-				i++;
-				Line line = iter.next();
-				if (i < commentScope.getMethodStartLine()) {
-					continue;
-				}
-				if (i > commentScope.getScopeEndLine()) {
-					break;
-				}
-
-				builder.append(line.getLine().replace("<", "&lt;")).append("\r\n");
+			model.addAttribute("oldhighlight", oldHighLight);
+			int[] newHighLight = new int[methodExtractorDto.getNewEndLine()-methodExtractorDto.getNewStartLine()+1+methodExtractorDto.getLocations().size()];
+			for(int i=methodExtractorDto.getNewStartLine();i<=methodExtractorDto.getNewEndLine();i++) {
+				newHighLight[i-methodExtractorDto.getNewStartLine()] = i;
 			}
-			comment.setCode(builder.toString());
-			comment.setScopeEndLine(commentScope.getScopeEndLine());
-			model.addAttribute("comment", comment);
-
-			// firstline为SyntaxHighlighter 显示的第一行的行号
-			model.addAttribute("firstline", commentScope.getMethodStartLine());
-
-			// highlight 为该对象对应的注释行号，将注释高亮显示
-			int endLine = endLineVerify.getEndLine();
-			int[] highlightNums = new int[endLine - commentScope.getCommentStartLine() + 1];
-			for (int highlightNum = commentScope.getCommentStartLine(); highlightNum <= endLine; highlightNum++) {
-				highlightNums[highlightNum - commentScope.getCommentStartLine()] = highlightNum;
+			for(int i=methodExtractorDto.getNewEndLine()-methodExtractorDto.getNewStartLine()+1;i<newHighLight.length;i++) {
+				newHighLight[i] = methodExtractorDto.getLocations().get(i-methodExtractorDto.getNewEndLine()+methodExtractorDto.getNewStartLine()-1);
 			}
-			model.addAttribute("highlight", highlightNums);
-			return "refactor_view";
+			model.addAttribute("oldhighlight", oldHighLight);
+			model.addAttribute("newhighlight",newHighLight);
+			return "methodextractor_view";
 		}
 	
 	@RequestMapping("/refactorsave")
