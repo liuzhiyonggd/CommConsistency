@@ -1,6 +1,5 @@
 package commconsistency.dto;
 
-import java.math.BigInteger;
 import java.util.List;
 
 

@@ -1,7 +1,5 @@
 package commconsistency.dao;
 
-import java.math.BigInteger;
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +9,7 @@ import commconsistency.domain.SubMethodExtractor;
 
 public interface SubMethodExtractorRepository extends MongoRepository<SubMethodExtractor, String>{
 	
-	Page<SubMethodExtractor> findAll(Pageable pageable);
+	Page<SubMethodExtractor> findByVerify(boolean verify,Pageable pageable);
+	SubMethodExtractor findByMethodExtractorId(int methodExtractorId);
 
 }

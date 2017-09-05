@@ -40,7 +40,7 @@ public class CommentScopeController {
 	private EndLineVerifyService endLineVerifyService;
 
 	// commentscope list(未验证) 展示
-	@RequestMapping("/commentscopelist_verification")
+	@RequestMapping("/commentscope/verificationlist")
 	public String commentScopeListVerification(@RequestParam("pageno") int pageNo,@RequestParam("pagesize") int pageSize,  Model model) {
 		if(pageNo<=1) {
 			pageNo = 1;
@@ -78,11 +78,11 @@ public class CommentScopeController {
 		}
 		model.addAttribute("commentscopelist", commentList);
 		model.addAttribute("pageno",pageNo);
-		return "commentscopelist_verification";
+		return "commentscope/verificationlist";
 	}
 	
 	// commentscope list(未验证) 展示
-		@RequestMapping("/commentscopelist_view")
+		@RequestMapping("/commentscope/viewlist")
 		public String commentScopeListView(@RequestParam("pageno") int pageNo,@RequestParam("pagesize") int pageSize,  Model model) {
 			if(pageNo<=1) {
 				pageNo = 1;
@@ -120,20 +120,20 @@ public class CommentScopeController {
 			}
 			model.addAttribute("commentscopelist", commentList);
 			model.addAttribute("pageno",pageNo);
-			return "commentscopelist_view";
+			return "commentscope/viewlist";
 		}
 
 	// 根据用户传递回来的commentID查找表，返回该comment的详细信息。
-	@RequestMapping("/commentscopeverification")
+	@RequestMapping("/commentscope/verification")
 	public String commentScopeVerification(@RequestParam("commentID") String paramsStr, Model model) {
 
 		int commentID = Integer.parseInt(paramsStr);
 		CommentScope commentScope = commentScopeService.findByCommentID(commentID);
 		EndLineVerify verify = endLineVerifyService.findByCommentID(commentID);
-		while(commentScope==null&&verify!=null) {
+		while(commentScope==null||verify!=null) {
 			commentID = nextCommentID(commentID);
 			commentScope = commentScopeService.findByCommentID(commentID);
-			endLineVerifyService.findByCommentID(commentID);
+			verify = endLineVerifyService.findByCommentID(commentID);
 		}
 
 		// 将查找到的对象进行DTO对象转换，转换成更小的对象传递给页面展示
@@ -176,7 +176,7 @@ public class CommentScopeController {
 			highlightNums[highlightNum - commentScope.getCommentStartLine()] = highlightNum;
 		}
 		model.addAttribute("highlight", highlightNums);
-		return "commentscope_verification";
+		return "commentscope/verification";
 	}
 	
 	private int nextCommentID(int commentID) {
@@ -201,7 +201,7 @@ public class CommentScopeController {
 	
 	
 	// 根据用户传递回来的commentID查找表，返回该comment的详细信息。
-		@RequestMapping("/commentscopeview")
+		@RequestMapping("/commentscope/view")
 		public String commentScopeView(@RequestParam("commentID") String paramsStr,@RequestParam("isNext") String isNext, Model model) {
 
 			int commentID = Integer.parseInt(paramsStr);
@@ -267,10 +267,10 @@ public class CommentScopeController {
 				highlightNums[highlightNum - commentScope.getCommentStartLine()] = highlightNum;
 			}
 			model.addAttribute("highlight", highlightNums);
-			return "commentscope_view";
+			return "commentscope/view";
 		}
 	
-	@RequestMapping("/save")
+	@RequestMapping("/commentscope/save")
 	public ModelAndView commentScopeSave(@ModelAttribute CommentScopeDto commentScopeDto,Model model) {
 		int commentID = commentScopeDto.getCommentID();
 		int verifyScopeEndLine = commentScopeDto.getScopeEndLine();
@@ -297,6 +297,6 @@ public class CommentScopeController {
 		subCommentScope.setVerify(true);
 		subCommentScopeService.save(subCommentScope);
 		
-		return new ModelAndView("redirect:/commentscopeverification?commentID="+(commentID+1));
+		return new ModelAndView("redirect:/commentscope/verification?commentID="+(commentID+1));
 	}
 }

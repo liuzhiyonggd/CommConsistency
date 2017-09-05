@@ -11,7 +11,7 @@ import commconsistency.domain.MethodExtractor;
 
 public interface MethodExtractorRepository extends MongoRepository<MethodExtractor,String>{
 	
-	Page<MethodExtractor> findAll(Pageable pageable);
+	Page<MethodExtractor> findByVerify(boolean verify,Pageable pageable);
 	MethodExtractor findASingleByProjectAndCommitIDAndClassName(String project,String commitID,String className);
 
 	MethodExtractor findASingleByMethodExtractorId(int methodExtractorId);

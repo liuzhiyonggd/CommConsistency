@@ -7,13 +7,13 @@
 <title>Comment Consistency</title>
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
 <!-- Bootstrap -->
-<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
+<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	media="screen" />
-<link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"
+<link href="/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"
 	media="screen" />
-<link href="bootstrap/css/bootstrapValidator.css" rel="stylesheet"
+<link href="/bootstrap/css/bootstrapValidator.css" rel="stylesheet"
 	media="screen" />
-<link href="vendors/easypiechart/jquery.easy-pie-chart.css"
+<link href="/vendors/easypiechart/jquery.easy-pie-chart.css"
 	rel="stylesheet" media="screen" />
 <link href="assets/styles.css" rel="stylesheet" media="screen" />
 <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -22,15 +22,15 @@
         <![endif]-->
 
 <!--/.fluid-container-->
-<link href="vendors/datepicker.css" rel="stylesheet" media="screen" />
-<link href="vendors/uniform.default.css" rel="stylesheet" media="screen" />
-<link href="vendors/chosen.min.css" rel="stylesheet" media="screen" />
-<link href="vendors/wysiwyg/bootstrap-wysihtml5.css" rel="stylesheet"
+<link href="/vendors/datepicker.css" rel="stylesheet" media="screen" />
+<link href="/vendors/uniform.default.css" rel="stylesheet" media="screen" />
+<link href="/vendors/chosen.min.css" rel="stylesheet" media="screen" />
+<link href="/vendors/wysiwyg/bootstrap-wysihtml5.css" rel="stylesheet"
 	media="screen" />
 <!-- syntaxHighlighter -->
-<link href="vendors/syntaxhighlighter/styles/shCore.css"
+<link href="/vendors/syntaxhighlighter/styles/shCore.css"
 	rel="stylesheet" />
-<link href="vendors/syntaxhighlighter/styles/shCoreEclipse.css"
+<link href="/vendors/syntaxhighlighter/styles/shCoreEclipse.css"
 	rel="stylesheet" />
 </head>
 
@@ -78,10 +78,10 @@
                                 </a>
                                 <ul class="dropdown-menu" id="menu1">
                                     <li>
-                                        <a th:href="@{/commentscopelist_view(pageno=1,pagesize=20)}">View</a>
+                                        <a th:href="@{/commentscope/viewlist(pageno=1,pagesize=20)}">View</a>
                                     </li>
                                     <li>
-                                        <a th:href="@{/commentscopelist_verification(pageno=1,pagesize=20)}">Verification</a>
+                                        <a th:href="@{/commentscope/verificationlist(pageno=1,pagesize=20)}">Verification</a>
                                     </li>
                                 </ul>
                             </li>
@@ -92,7 +92,7 @@
                                 </a>
                                 <ul class="dropdown-menu" id="menu1">
                                     <li>
-                                        <a th:href="@{/methodextractorlist(pageno=1,pagesize=20)}">MethodExtract</a>
+                                        <a th:href="@{/refactor/methodextractor/list(pageno=1,pagesize=20)}">MethodExtract</a>
                                     </li>
                                     <li>
                                         <a href="#">other</a>
@@ -130,10 +130,10 @@
 						</form>
 						<ul class="pager">
 						<li class="previous"><a
-							th:href="@{/commentscopeview(commentID=${comment.commentID-1},isNext=false)}">&larr;
-								Privious</a></li>
+							th:href="@{/commentscope/view(commentID=${comment.commentID-1},isNext=false)}">&larr;
+								Previous</a></li>
 						<li class="next"><a
-							th:href="@{/commentscopeview(commentID=${comment.commentID+1},isNext=true)}">Next
+							th:href="@{/commentscope/view(commentID=${comment.commentID+1},isNext=true)}">Next
 								&rarr;</a></li>
 
 
@@ -147,28 +147,28 @@
 
 	</div>
 
-	<script src="vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-	<script src="vendors/jquery-1.9.1.js"></script>
-	<script src="bootstrap/js/bootstrap.min.js"></script>
-	<script src="vendors/jquery.uniform.min.js"></script>
-	<script src="vendors/chosen.jquery.min.js"></script>
-	<script src="vendors/bootstrap-datepicker.js"></script>
+	<script src="/vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+	<script src="/vendors/jquery-1.9.1.js"></script>
+	<script src="/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/vendors/jquery.uniform.min.js"></script>
+	<script src="/vendors/chosen.jquery.min.js"></script>
+	<script src="/vendors/bootstrap-datepicker.js"></script>
 
-	<script src="vendors/wysiwyg/wysihtml5-0.3.0.js"></script>
-	<script src="vendors/wysiwyg/bootstrap-wysihtml5.js"></script>
+	<script src="/vendors/wysiwyg/wysihtml5-0.3.0.js"></script>
+	<script src="/vendors/wysiwyg/bootstrap-wysihtml5.js"></script>
 
-	<script src="vendors/wizard/jquery.bootstrap.wizard.min.js"></script>
+	<script src="/vendors/wizard/jquery.bootstrap.wizard.min.js"></script>
 
 	<script type="text/javascript"
-		src="vendors/jquery-validation/dist/jquery.validate.min.js"></script>
+		src="/vendors/jquery-validation/dist/jquery.validate.min.js"></script>
 	<script src="assets/form-validation.js"></script>
 
 	<script src="assets/scripts.js"></script>
 	<!-- syntaxHighlighter -->
 	<script type="text/javascript"
-		src="vendors/syntaxhighlighter/scripts/shCore.js"></script>
+		src="/vendors/syntaxhighlighter/scripts/shCore.js"></script>
 	<script type="text/javascript"
-		src="vendors/syntaxhighlighter/scripts/shBrushJava.js"></script>
+		src="/vendors/syntaxhighlighter/scripts/shBrushJava.js"></script>
 	<script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
 	<script th:inline="javascript">
 	    document.getElementsByTagName('pre')[0].innerHTML = [[${comment.code}]]
@@ -182,45 +182,6 @@
 	    console.log("syntaxHighlighter run.");
 	</script>
 
-	<script th:inline="javascript">
-	var _endline = [[${comment.scopeEndLine}]];
-    var _firstline = [[${highlight[0]}]];
-	$(document).ready(function() {
-		
-	    $('#commentForm').bootstrapValidator({
-	        message: 'This value is not valid',
-	        feedbackIcons: {
-	            valid: 'glyphicon glyphicon-ok',
-	            invalid: 'glyphicon glyphicon-remove',
-	            validating: 'glyphicon glyphicon-refresh'
-	        },
-	        fields: {
-	            scopeEndLine: {
-	                message: 'The endline is not valid',
-	                validators: {
-	                	notEmpty: {
-	                        message: 'The endline is required and can\'t be empty'
-	                    },
-	                    callback: {
-	                	    message: 'Wrong value,the endline must between comment line and last line',
-	                	    callback: function(value, validator) {
-	                	    	var b1=value>=_firstline;
-	                	    	var b2=_endline>=value;
-	                	    	if(b1){
-	                	    		if(b2){
-	                	    			return true;
-	                	    		}
-	                	    	}
-	                	    	return false;
-	                        }
-	                    }
-	                }
-	            }
-	        }
-	        });
-	    console.log("run validator.");
-	    });
-	</script>
 </body>
 
 </html>

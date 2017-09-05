@@ -35,12 +35,6 @@ import commconsistency.utils.SpringDataPageable;
 @Controller
 public class RefactorController {
 
-	@Autowired
-	private CommentScopeService commentScopeService;
-	@Autowired
-	private SubCommentScopeService subCommentScopeService;
-	@Autowired
-	private EndLineVerifyService endLineVerifyService;
 	
 	@Autowired
 	private MethodExtractorService methodExtractorService;
@@ -48,8 +42,8 @@ public class RefactorController {
 	@Autowired
 	private SubMethodExtractorService subMethodExtractorService;
 
-	// commentscope list(未验证) 展示
-	@RequestMapping("/methodextractorlist")
+	// methodextractor list(未验证) 展示
+	@RequestMapping("/refactor/methodextractor/list")
 	public String methodExtractor(@RequestParam("pageno") int pageNo,@RequestParam("pagesize") int pageSize,  Model model) {
 		if(pageNo<=1) {
 			pageNo = 1;
@@ -61,7 +55,7 @@ public class RefactorController {
 		//当前页  
 		pageable.setPagenumber(pageNo);  
 		
-		Page<SubMethodExtractor> page = subMethodExtractorService.findAll(pageable); 
+		Page<SubMethodExtractor> page = subMethodExtractorService.findByVerify(false,pageable); 
 		
 		if(page.isLast()) {
 			pageNo = pageNo-1;
@@ -83,16 +77,20 @@ public class RefactorController {
 		}
 		model.addAttribute("methodextractorlist", methodExtractorList);
 		model.addAttribute("pageno",pageNo);
-		return "methodextractor_list";
+		return "refactor/methodextractor/list";
 	}
 	
 	
 	
-	// 根据用户传递回来的commentID查找表，返回该comment的详细信息。
-		@RequestMapping("/methodextractorview")
+	// 根据用户传递回来的ID查找表，返回该methodExtractor的详细信息。
+		@RequestMapping("/refactor/methodextractor/view")
 		public String methodExtractorView(@RequestParam("id") String id,Model model) {
-             
-			MethodExtractor methodExtractor = methodExtractorService.findByMethodExtractorId(Integer.parseInt(id));
+            int methodExtractorId = Integer.parseInt(id); 
+			MethodExtractor methodExtractor = methodExtractorService.findByMethodExtractorId(methodExtractorId);
+			while(methodExtractor.isVerify()) {
+				methodExtractorId++;
+				methodExtractor = methodExtractorService.findByMethodExtractorId(methodExtractorId);
+			}
 			MethodExtractorDto methodExtractorDto = new MethodExtractorDto();
 			methodExtractorDto.setMethodExtractorId(methodExtractor.getMethodExtractorId());;
 			methodExtractorDto.setProject(methodExtractor.getProject());
@@ -132,36 +130,23 @@ public class RefactorController {
 			}
 			model.addAttribute("oldhighlight", oldHighLight);
 			model.addAttribute("newhighlight",newHighLight);
-			return "methodextractor_view";
+			return "refactor/methodextractor/view";
 		}
 	
-	@RequestMapping("/refactorsave")
-	public ModelAndView commentScopeSave(@ModelAttribute CommentScopeDto commentScopeDto,Model model) {
-		int commentID = commentScopeDto.getCommentID();
-		int verifyScopeEndLine = commentScopeDto.getScopeEndLine();
-		CommentScope comment = commentScopeService.findByCommentID(commentID);
-		List<Integer> verifyScopeEndLineList = comment.getVerifyScopeEndLineList();
-		if(comment.getVerifyScopeEndLineList()==null) {
-			verifyScopeEndLineList = new ArrayList<Integer>();
-		}
-		verifyScopeEndLineList.add(verifyScopeEndLine);
-		comment.setVerifyScopeEndLineList(verifyScopeEndLineList);
-		commentScopeService.save(comment);
-		EndLineVerify endLineVerify = new EndLineVerify();
-		
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()  
-			    .getAuthentication()  
-			    .getPrincipal(); 
-		
-		endLineVerify.setUserName(userDetails.getUsername());
-		endLineVerify.setEndLine(verifyScopeEndLine);
-		endLineVerify.setCommentID(commentScopeDto.getCommentID());
-		endLineVerifyService.insert(endLineVerify);
-		
-		SubCommentScope subCommentScope = subCommentScopeService.findByCommentID(commentID);
-		subCommentScope.setVerify(true);
-		subCommentScopeService.save(subCommentScope);
-		
-		return new ModelAndView("redirect:/commentscopeverification?commentID="+(commentID+1));
+		//保存methodExtractor
+	@RequestMapping("/refactor/methodextractor/save")
+	public ModelAndView methodExtractorSave(@RequestParam String verify,@RequestParam String id,Model model) {
+		int methodId = Integer.parseInt(id);
+		MethodExtractor methodExtractor = methodExtractorService.findByMethodExtractorId(methodId);
+		SubMethodExtractor subMethodExtractor = subMethodExtractorService.findByMethodExtractorId(methodId);
+		boolean isVerify = verify.equals("true")?true:false;
+		methodExtractor.setVerify(true);
+		subMethodExtractor.setVerify(true);
+		methodExtractor.setRefactor(isVerify);
+		subMethodExtractor.setRefactor(isVerify);
+		methodExtractorService.save(methodExtractor);
+		subMethodExtractorService.save(subMethodExtractor);
+		return new ModelAndView("redirect:/refactor/methodextractor/view?id="+(methodId+1));
 	}
+	
 }

@@ -1,6 +1,5 @@
 package commconsistency.domain;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -9,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection="method_extractor")
 public class MethodExtractor {
+	@Id
+	private String id;
 	@Field("method_extractor_id")
 	private int methodExtractorId;
 	private String project;
@@ -30,8 +31,23 @@ public class MethodExtractor {
 	private List<String> oldCodeList;
 	@Field("new_code")
 	private List<String> newCodeList;
+	@Field("verify")
+	private boolean verify;
+	@Field("isrefactor")
+	private boolean isRefactor;
 	
-	
+	public boolean isRefactor() {
+		return isRefactor;
+	}
+	public void setRefactor(boolean isRefactor) {
+		this.isRefactor = isRefactor;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public int getMethodExtractorId() {
 		return methodExtractorId;
 	}
@@ -97,6 +113,12 @@ public class MethodExtractor {
 	}
 	public void setNewCodeList(List<String> newCodeList) {
 		this.newCodeList = newCodeList;
+	}
+	public boolean isVerify() {
+		return verify;
+	}
+	public void setVerify(boolean verify) {
+		this.verify = verify;
 	}
 	
 	

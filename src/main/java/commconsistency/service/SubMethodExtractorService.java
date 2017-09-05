@@ -12,8 +12,14 @@ import commconsistency.domain.SubMethodExtractor;
 public class SubMethodExtractorService {
 	@Autowired
 	private SubMethodExtractorRepository subMethodExtractorRepository;
-	public Page<SubMethodExtractor> findAll(Pageable pageable){
-		return subMethodExtractorRepository.findAll(pageable);
+	public Page<SubMethodExtractor> findByVerify(boolean verify,Pageable pageable){
+		return subMethodExtractorRepository.findByVerify(verify,pageable);
+	}
+	public SubMethodExtractor findByMethodExtractorId(int methodExtractorId) {
+		return subMethodExtractorRepository.findByMethodExtractorId(methodExtractorId);
+	}
+	public void save(SubMethodExtractor subMethodExtractor) {
+		subMethodExtractorRepository.save(subMethodExtractor);
 	}
 
 }

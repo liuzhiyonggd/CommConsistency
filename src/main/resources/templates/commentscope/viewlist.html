@@ -4,32 +4,32 @@
 	class="no-js">
 
 <head>
-<title>MethodExtracted Refactor</title>
+<title>Comment Consistency</title>
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
 <!-- Bootstrap -->
-<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
+<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	media="screen" />
-<link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"
+<link href="/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"
 	media="screen" />
-<link href="vendors/easypiechart/jquery.easy-pie-chart.css"
+<link href="/vendors/easypiechart/jquery.easy-pie-chart.css"
 	rel="stylesheet" media="screen" />
-<link href="assets/styles.css" rel="stylesheet" media="screen" />
-<link href="assets/DT_bootstrap.css" rel="stylesheet" media="screen" />
+<link href="/assets/styles.css" rel="stylesheet" media="screen" />
+<link href="/assets/DT_bootstrap.css" rel="stylesheet" media="screen" />
 <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
             <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 
 <!--/.fluid-container-->
-<link href="vendors/datepicker.css" rel="stylesheet" media="screen" />
-<link href="vendors/uniform.default.css" rel="stylesheet" media="screen" />
-<link href="vendors/chosen.min.css" rel="stylesheet" media="screen" />
-<link href="vendors/wysiwyg/bootstrap-wysihtml5.css" rel="stylesheet"
+<link href="/vendors/datepicker.css" rel="stylesheet" media="screen" />
+<link href="/vendors/uniform.default.css" rel="stylesheet" media="screen" />
+<link href="/vendors/chosen.min.css" rel="stylesheet" media="screen" />
+<link href="/vendors/wysiwyg/bootstrap-wysihtml5.css" rel="stylesheet"
 	media="screen" />
 <!-- syntaxHighlighter -->
-<link href="vendors/syntaxhighlighter/styles/shCore.css"
+<link href="/vendors/syntaxhighlighter/styles/shCore.css"
 	rel="stylesheet" />
-<link href="vendors/syntaxhighlighter/styles/shCoreEclipse.css"
+<link href="/vendors/syntaxhighlighter/styles/shCoreEclipse.css"
 	rel="stylesheet" />
 </head>
 
@@ -76,10 +76,10 @@
                                 </a>
                                 <ul class="dropdown-menu" id="menu1">
                                     <li>
-                                        <a th:href="@{/commentscopelist_view(pageno=1,pagesize=20)}">View</a>
+                                        <a th:href="@{/commentscope/viewlist(pageno=1,pagesize=20)}">View</a>
                                     </li>
                                     <li>
-                                        <a th:href="@{/commentscopelist_verification(pageno=1,pagesize=20)}">Verification</a>
+                                        <a th:href="@{/commentscope/verificationlist(pageno=1,pagesize=20)}">Verification</a>
                                     </li>
                                 </ul>
                             </li>
@@ -90,7 +90,7 @@
                                 </a>
                                 <ul class="dropdown-menu" id="menu1">
                                     <li>
-                                        <a th:href="@{/methodextractorlist(pageno=1,pagesize=20)}">MethodExtract</a>
+                                        <a th:href="@{/refactor/methodextractor/list(pageno=1,pagesize=20)}">MethodExtract</a>
                                     </li>
                                     <li>
                                         <a href="#">other</a>
@@ -109,7 +109,7 @@
 			<!-- block -->
 			<div class="block">
 				<div class="navbar navbar-inner block-header">
-					<div class="muted pull-left">Method Extracted</div>
+					<div class="muted pull-left">Comment Scope</div>
 				</div>
 				<div class="block-content collapse in">
 
@@ -123,22 +123,22 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr class="odd gradeX" th:each="methodextractor:${methodextractorlist}">
-								<td th:text="${methodextractor.project}">JHotdraw</td>
-								<td th:text="${methodextractor.commitID2}">1</td>
-								<td th:text="${methodextractor.className2}">Main</td>
+							<tr class="odd gradeX" th:each="comment:${commentscopelist}">
+								<td th:text="${comment.project}">JHotdraw</td>
+								<td th:text="${comment.commitID}">1</td>
+								<td th:text="${comment.className}">Main</td>
 								<td><a
-									th:href="@{/methodextractorview(id=${methodextractor.methodExtractorId},isNext=true)} " target="_blank">View</a></td>
+									th:href="@{/commentscope/view(commentID=${comment.commentID},isNext=true)} " target="_blank">View</a></td>
 							</tr>
 						</tbody>
 					</table>
 					<ul class="pager">
 						<li class="previous"><a
-							th:href="@{/methodextractorlist(pageno=${pageno-1},pagesize=20)}">&larr;
+							th:href="@{/commentscope/viewlist(pageno=${pageno-1},pagesize=20)}">&larr;
 								Previous</a></li>
 						<li class="next" th:text="${'page '+pageno}"></li>
 						<li class="next"><a
-							th:href="@{/methodextractorlist(pageno=${pageno+1},pagesize=20)}">Next
+							th:href="@{/commentscope/viewlist(pageno=${pageno+1},pagesize=20)}">Next
 								&rarr;</a></li>
 
 
@@ -150,13 +150,13 @@
 
 	</div>
 
-	<script src="vendors/jquery-1.9.1.js"></script>
-	<script src="bootstrap/js/bootstrap.min.js"></script>
-	<script src="vendors/datatables/js/jquery.dataTables.min.js"></script>
+	<script src="/vendors/jquery-1.9.1.js"></script>
+	<script src="/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/vendors/datatables/js/jquery.dataTables.min.js"></script>
 
 
-	<script src="assets/scripts.js"></script>
-	<script src="assets/DT_bootstrap.js"></script>
+	<script src="/assets/scripts.js"></script>
+	<script src="/assets/DT_bootstrap.js"></script>
 	<script>
 		
 	</script>

@@ -15,8 +15,8 @@ public class MethodExtractorService {
 	@Autowired
 	private MethodExtractorRepository methodExtractorRepository;
 
-	public Page<MethodExtractor> findAll(Pageable pageable) {
-		Page<MethodExtractor> methodExtractorPage = methodExtractorRepository.findAll(pageable);
+	public Page<MethodExtractor> findByVerify(boolean verify,Pageable pageable) {
+		Page<MethodExtractor> methodExtractorPage = methodExtractorRepository.findByVerify(verify,pageable);
 		
 		return methodExtractorPage;
 	}
@@ -27,5 +27,9 @@ public class MethodExtractorService {
 	
 	public MethodExtractor findByMethodExtractorId(int methodExtractorId) {
 		return methodExtractorRepository.findASingleByMethodExtractorId(methodExtractorId);
+	}
+	
+	public void save(MethodExtractor methodExtractor) {
+		methodExtractorRepository.save(methodExtractor);
 	}
 }
