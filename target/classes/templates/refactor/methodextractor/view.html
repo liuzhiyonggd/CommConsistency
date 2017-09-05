@@ -162,8 +162,8 @@
 			</div>
 			<form action="" style="text-align: center;">
 			    <label>Is Refactor?</label>
-			    <button class="btn btn-primary" onclick="yes()">YES</button>
-			    <button class="btn btn-danger" onclick="no()">NO</button>
+			    <input type="button" class="btn btn-primary" onclick="yes()" value="YES" id="yes_btn"></input>
+			    <input type="button" class="btn btn-danger" onclick="no()" value="NO" id="no_btn"></input>
 			</form>
 			<!-- /block -->
 			</div>
@@ -213,6 +213,8 @@
 	/*<![CDATA[*/
 		function yes(){
 	    	 window.location.href="/refactor/methodextractor/save?verify=true&id="+[[${methodextractor.methodExtractorId}]];
+	    	 document.getElementById('yes_btn').disable = true;
+	    	 document.getElementById('yes_btn').disable = true;
 	    } 
 	/*]]>*/
 	    
@@ -222,6 +224,8 @@
 	/*<![CDATA[*/
 		function no(){
 	    	 window.location.href="/refactor/methodextractor/save?verify=false&id="+[[${methodextractor.methodExtractorId}]];
+	    	 document.getElementById('yes_btn').disable = true;
+	    	 document.getElementById('yes_btn').disable = true;
 	    } 
 	/*]]>*/
 	</script>
