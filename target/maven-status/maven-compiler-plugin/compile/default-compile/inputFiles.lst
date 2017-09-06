@@ -5,6 +5,7 @@ E:\git\CommConsistency\src\main\java\commconsistency\dao\EndLineVerifyRepository
 E:\git\CommConsistency\src\main\java\commconsistency\domain\Line.java
 E:\git\CommConsistency\src\main\java\commconsistency\refactor\rules\RefactChange.java
 E:\git\CommConsistency\src\main\java\commconsistency\service\CustomUserDetailsService.java
+E:\git\CommConsistency\src\main\java\commconsistency\dto\UserVerify.java
 E:\git\CommConsistency\src\main\java\commconsistency\web\CommentScopeController.java
 E:\git\CommConsistency\src\main\java\commconsistency\dao\MethodExtractorRepository.java
 E:\git\CommConsistency\src\main\java\commconsistency\dao\SubCommentScopeRepository.java

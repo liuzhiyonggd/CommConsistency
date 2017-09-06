@@ -122,28 +122,28 @@
 							<div class="span3">
 								<div class="chart" data-percent="73">73%</div>
 								<div class="chart-bottom-heading">
-									<span class="label label-info">Visitors</span>
+									<span class="label label-info">CommentScope</span>
 
 								</div>
 							</div>
 							<div class="span3">
 								<div class="chart" data-percent="53">53%</div>
 								<div class="chart-bottom-heading">
-									<span class="label label-info">Page Views</span>
+									<span class="label label-info">Refactoring</span>
 
 								</div>
 							</div>
 							<div class="span3">
 								<div class="chart" data-percent="83">83%</div>
 								<div class="chart-bottom-heading">
-									<span class="label label-info">Users</span>
+									<span class="label label-info">CommConsistency</span>
 
 								</div>
 							</div>
 							<div class="span3">
 								<div class="chart" data-percent="13">13%</div>
 								<div class="chart-bottom-heading">
-									<span class="label label-info">Orders</span>
+									<span class="label label-info">Others</span>
 
 								</div>
 							</div>
@@ -156,9 +156,10 @@
 						<!-- block -->
 						<div class="block">
 							<div class="navbar navbar-inner block-header">
-								<div class="muted pull-left">Users</div>
+								<div class="muted pull-left">CommentScope Verification</div>
 								<div class="pull-right">
-									<span class="badge badge-info">1,234</span>
+									<p class="badge badge-info" th:text="${verifyno}">340</p>
+									
 
 								</div>
 							</div>
@@ -166,30 +167,17 @@
 								<table class="table table-striped">
 									<thead>
 										<tr>
-											<th>#</th>
-											<th>First Name</th>
-											<th>Last Name</th>
-											<th>Username</th>
+											
+											<th>User Name</th>
+											<th>Role</th>
+											<th>Verify Number</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<td>1</td>
-											<td>Mark</td>
-											<td>Otto</td>
-											<td>@mdo</td>
-										</tr>
-										<tr>
-											<td>2</td>
-											<td>Jacob</td>
-											<td>Thornton</td>
-											<td>@fat</td>
-										</tr>
-										<tr>
-											<td>3</td>
-											<td>Vincent</td>
-											<td>Gabriel</td>
-											<td>@gabrielva</td>
+										<tr th:each="userverify:${verifylist}">
+											<td th:text="${userverify.userName}">Li Ming</td>
+											<td th:text="${userverify.role}">USER_ROLE</td>
+											<td th:text="${userverify.verifyNo}">100</td>
 										</tr>
 									</tbody>
 								</table>
