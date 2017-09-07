@@ -2,10 +2,8 @@ package commconsistency.web;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import commconsistency.dao.CommentScopeRepository;
 import commconsistency.domain.CommentScope;
 import commconsistency.domain.EndLineVerify;
 import commconsistency.domain.Line;
@@ -199,6 +196,26 @@ public class CommentScopeController {
 		return nextCommentID;
 	}
 	
+	private int previousCommentID(int commentID) {
+		int previousCommentID = commentID;
+		if((commentID>111182&&commentID<=111686)||(commentID>114674&&commentID<=115179)
+				||(commentID>122577&&commentID<=123077)||(commentID>124859&&commentID<=125369)) {
+			previousCommentID--;
+		}
+		else if(commentID<=111182){
+			previousCommentID = 111182;
+		}else if(commentID>111686&&commentID<=114674) {
+			previousCommentID = 111686;
+		}else if(commentID>115179&&commentID<=122577) {
+			previousCommentID = 115179;
+		}else if(commentID>123077&&commentID<=124859) {
+			previousCommentID = 123077;
+		}else if(commentID>125369){
+			previousCommentID = 125369;
+		}
+		return previousCommentID;
+	}
+	
 	
 	// 根据用户传递回来的commentID查找表，返回该comment的详细信息。
 		@RequestMapping("/commentscope/view")
@@ -206,22 +223,15 @@ public class CommentScopeController {
 
 			int commentID = Integer.parseInt(paramsStr);
 			
-			int minCommentID = 124860;
-			int maxCommentID = 125074;
-			if(commentID<minCommentID) {
-				commentID = 124860;
-			}
-			if(commentID>maxCommentID) {
-				commentID = 125074;
-			}
+			
 		
 			EndLineVerify endLineVerify = endLineVerifyService.findByCommentID(commentID);
 			while(endLineVerify==null) {
 				if(isNext.equals("true")) {
-				    commentID++;
+				    commentID = nextCommentID(commentID);
 				    endLineVerify = endLineVerifyService.findByCommentID(commentID);
 				}else {
-					commentID--;
+					commentID = previousCommentID(commentID);
 					endLineVerify = endLineVerifyService.findByCommentID(commentID);
 				}
 			}
