@@ -1,9 +1,13 @@
 package commconsistency.web;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import commconsistency.domain.CommentScope;
@@ -308,5 +313,28 @@ public class CommentScopeController {
 		subCommentScopeService.save(subCommentScope);
 		
 		return new ModelAndView("redirect:/commentscope/verification?commentID="+(commentID+1));
+	}
+	
+	@RequestMapping("/commentscope/uploadview")
+	public String fileUploadView(Model model) {
+		return "commentscope/uploadview";
+	}
+	
+	@RequestMapping("/commentscope/uploadfile")
+	public String fileUpload(HttpServletRequest req,MultipartHttpServletRequest multiReq,Model model) {
+		
+		File file = new File("d:/temp.java");
+		try {
+			multiReq.getFile("file").transferTo(file);
+			
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
+		
+		return "index";
 	}
 }
