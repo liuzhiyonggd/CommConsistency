@@ -11,7 +11,7 @@ import commconsistency.domain.CommentScope;
 
 public interface CommentScopeRepository extends MongoRepository<CommentScope,String>{
 
-	CommentScope findByCommentID(int commentID);
+	CommentScope findASingleByCommentID(int commentID);
 	
 	Page<CommentScope> findByVerifyScopeEndLineList(List<Integer> verifyScopeEndLineList,Pageable pageable);
 }

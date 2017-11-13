@@ -36,8 +36,8 @@ public class TableGenerator2 {
 	}
 
 	public static void insertLocalDB() throws IOException {
-		MongoDatabase database = new MongoClient("192.168.2.168", 27017).getDatabase("sourcebase");
-		MongoCollection<Document> classes = database.getCollection("class_message2");
+		MongoDatabase database = new MongoClient("192.168.2.168", 27017).getDatabase("scopebase");
+		MongoCollection<Document> classes = database.getCollection("class_message");
 		MongoCollection<Document> methodExtractors = database.getCollection("method_extractor");
 		List<String> fileList = FileUtils.readLines(new File("e:/1.txt"), "UTF-8");
 		int i = 0;

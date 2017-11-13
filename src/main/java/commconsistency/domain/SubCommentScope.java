@@ -12,13 +12,23 @@ public class SubCommentScope {
 	
 	@Field("comment_id")
 	private int commentID;
+	
 	private String project;
-	@Field("commit_id")
-	private String commitID;
+	
 	@Field("class_name")
 	private String className;
+	
+	private String type;
+	
 	@Field("isverify")
 	private boolean isVerify;
+	
+	@Field("filter1")
+	private boolean filter1 = false;
+	
+	@Field("filter2")
+	private boolean filter2 = false;
+	
 	public String getId() {
 		return id;
 	}
@@ -37,12 +47,6 @@ public class SubCommentScope {
 	public void setProject(String project) {
 		this.project = project;
 	}
-	public String getCommitID() {
-		return commitID;
-	}
-	public void setCommitID(String commitID) {
-		this.commitID = commitID;
-	}
 	public String getClassName() {
 		return className;
 	}
@@ -54,6 +58,24 @@ public class SubCommentScope {
 	}
 	public void setVerify(boolean isVerify) {
 		this.isVerify = isVerify;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public boolean isFilter1() {
+		return filter1;
+	}
+	public void setFilter1(boolean filter1) {
+		this.filter1 = filter1;
+	}
+	public boolean isFilter2() {
+		return filter2;
+	}
+	public void setFilter2(boolean filter2) {
+		this.filter2 = filter2;
 	}
 	
 	

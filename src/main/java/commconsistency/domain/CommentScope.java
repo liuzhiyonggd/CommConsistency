@@ -1,6 +1,8 @@
 package commconsistency.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -15,27 +17,44 @@ public class CommentScope {
 	
 	@Field("comment_id")
 	private int commentID;
+	
+	@Field("class_id")
+	private int classID;
+	
 	private String project;
-	@Field("commit_id")
-	private String commitID;
+	
 	@Field("class_name")
 	private String className;
+	
+	private String type;
+	
 	@Field("method_start_line")
 	private int methodStartLine;
+	
 	@Field("method_end_line")
 	private int methodEndLine;
+	
 	@Field("scope_start_line")
 	private int scopeStartLine;
+	
 	@Field("scope_end_line")
 	private int scopeEndLine;
+	
 	@Field("comment_start_line")
 	private int commentStartLine;
+	
 	@Field("comment_end_line")
 	private int commentEndLine;
+	
 	@Field("codes")
-	private Collection<Line> codeList;
+	private List<String> codeList;
 	
 	private List<Integer> verifyScopeEndLineList;
+	
+	@Field("filter1")
+	private boolean filter1=false;
+	@Field("filter2")
+	private boolean filter2=false;
 	
 	public int getCommentID() {
 		return commentID;
@@ -48,12 +67,6 @@ public class CommentScope {
 	}
 	public void setProject(String project) {
 		this.project = project;
-	}
-	public String getCommitID() {
-		return commitID;
-	}
-	public void setCommitID(String commitID) {
-		this.commitID = commitID;
 	}
 	public String getClassName() {
 		return className;
@@ -97,10 +110,10 @@ public class CommentScope {
 	public void setCommentEndLine(int commentEndLine) {
 		this.commentEndLine = commentEndLine;
 	}
-	public Collection<Line> getCodeList() {
+	public List<String> getCodeList() {
 		return codeList;
 	}
-	public void setCodeList(Collection<Line> codeList) {
+	public void setCodeList(List<String> codeList) {
 		this.codeList = codeList;
 	}
 	public String getId() {
@@ -114,6 +127,30 @@ public class CommentScope {
 	}
 	public void setVerifyScopeEndLineList(List<Integer> verifyScopeEndLineList) {
 		this.verifyScopeEndLineList = verifyScopeEndLineList;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public int getClassID() {
+		return classID;
+	}
+	public void setClassID(int classID) {
+		this.classID = classID;
+	}
+	public boolean isFilter1() {
+		return filter1;
+	}
+	public void setFilter1(boolean filter1) {
+		this.filter1 = filter1;
+	}
+	public boolean isFilter2() {
+		return filter2;
+	}
+	public void setFilter2(boolean filter2) {
+		this.filter2 = filter2;
 	}
 	
 	

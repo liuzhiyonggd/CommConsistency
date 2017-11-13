@@ -18,10 +18,10 @@ public class CommentScopeService {
 	@Autowired
 	private CommentScopeRepository commentScopeRepository;
 	
-	@Cacheable(value="commentScope",key="'commentID_'+#commentID")
+//	@Cacheable(value="commentScope",key="'commentID_'+#commentID")
 	public CommentScope findByCommentID(int commentID) {
-		CommentScope comment = commentScopeRepository.findByCommentID(commentID);
-		Logger.getLogger(this.getClass()).info("为commentID="+commentID+" 做了缓存.");
+		CommentScope comment = commentScopeRepository.findASingleByCommentID(commentID);
+//		Logger.getLogger(this.getClass()).info("为commentID="+commentID+" 做了缓存.");
 		return comment;
 	}
 	

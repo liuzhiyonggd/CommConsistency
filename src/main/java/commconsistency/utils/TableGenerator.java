@@ -1,5 +1,6 @@
 package commconsistency.utils;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -10,14 +11,12 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.internal.compiler.lookup.Scope;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.Block;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -31,24 +30,25 @@ public class TableGenerator {
 	static {
 	    root.setLevel(Level.INFO);
 	}
-	public static void main2(String[] args) {
-		MongoDatabase database = new MongoClient("192.168.1.128", 27017).getDatabase("sourcebase");
-		MongoCollection<Document> classes = database.getCollection("class_message2");
-		MongoCollection<Document> comments = database.getCollection("comment5");
+	public static void generateCommentScopeTable() {
+		MongoDatabase database = new MongoClient("192.168.2.168", 27017).getDatabase("scopebase");
+		MongoCollection<Document> classes = database.getCollection("class_message");
+		MongoCollection<Document> comments = database.getCollection("comment");
 		MongoCollection<Document> scopeComments = database.getCollection("comment_scope");
 
 		BasicDBObject query = new BasicDBObject();
-		query.put("project", "struts");
+//		query.put("project", "struts");
 
-		FindIterable<Document> iter = comments.find(query).limit(500);
+		FindIterable<Document> iter = comments.find();
 		MongoCursor<Document> cursor = iter.iterator();
 		while (cursor.hasNext()) {
 			Document doc = cursor.next();
-			String project = doc.getString("project");
-			String commitID = doc.getString("commit_id");
-			String className = doc.getString("class_name");
-			List<String> commentStrings = (List<String>)doc.get("old_comment");
-			List<String> codeStrings = (List<String>)doc.get("old_code");
+			if(!doc.getString("type").equals("purpose ")) {
+				continue;
+			}
+			int classID = doc.getInteger("class_id");
+			List<String> commentStrings = (List<String>)doc.get("comment");
+			List<String> codeStrings = (List<String>)doc.get("codes");
 			
 			List<String> words = new ArrayList<String>();
 			String splitToken = " .,;:/&|`~%+=-*<>$#@!^\\()[]{}''\"\r\n\t";
@@ -65,23 +65,20 @@ public class TableGenerator {
 				continue;
 			}
 			
-			int oldStartLine = doc.getInteger("old_scope_startline");
-			int oldEndLine = doc.getInteger("old_scope_endline");
+			int startLine = doc.getInteger("scope_start_line");
+			int endLine = doc.getInteger("scope_end_line");
 			BasicDBObject query2 = new BasicDBObject();
-			query2.put("project", project);
-			query2.put("commit_id", commitID);
-			query2.put("class_name", className);
+			query2.put("class_id", classID);
 			Document clazz = classes.find(query2).first();
 
-			List<Document> codes = (List<Document>) clazz.get("old_code");
+			List<String> codes = (List<String>) clazz.get("codes");
 			
 			StringBuilder sb = new StringBuilder();
-			for (Document code : codes) {
-				String str = code.getString("line");
-				sb.append(str).append("\r\n");
+			for (String code : codes) {
+				sb.append(code).append("\r\n");
 			}
 
-			ASTParser astParser = ASTParser.newParser(AST.JLS3);
+			ASTParser astParser = ASTParser.newParser(AST.JLS8);
 			astParser.setSource(sb.toString().toCharArray());
 			astParser.setKind(ASTParser.K_COMPILATION_UNIT);
 
@@ -94,7 +91,7 @@ public class TableGenerator {
 				int t_methodStartLine = unit.getLineNumber(method.getStartPosition());
 				int t_methodEndLine = unit.getLineNumber(method.getStartPosition()+method.getLength()-1);
 				
-				if(t_methodStartLine<=oldStartLine&&t_methodEndLine>=oldEndLine) {
+				if(t_methodStartLine<=startLine&&t_methodEndLine>=endLine) {
 					methodStartLine = t_methodStartLine;
 					methodEndLine = t_methodEndLine;
 					break;
@@ -103,15 +100,16 @@ public class TableGenerator {
 			
 			Document scopeDocument = new Document();
 			scopeDocument.put("comment_id", doc.get("comment_id"));
-			scopeDocument.put("project", project);
-			scopeDocument.put("commit_id", commitID);
-			scopeDocument.put("class_name", className);
+			scopeDocument.put("class_id", doc.get("class_id"));
+			scopeDocument.put("project", clazz.get("project"));
+			scopeDocument.put("class_name", clazz.get("class_name"));
+			scopeDocument.put("type", doc.get("type"));
 			scopeDocument.put("method_start_line", methodStartLine);
 			scopeDocument.put("method_end_line", methodEndLine);
-			scopeDocument.put("scope_start_line", oldStartLine);
-			scopeDocument.put("scope_end_line", oldEndLine);
-			scopeDocument.put("comment_start_line", doc.get("old_comment_startline"));
-			scopeDocument.put("comment_end_line", doc.get("old_comment_endline"));
+			scopeDocument.put("scope_start_line", startLine);
+			scopeDocument.put("scope_end_line", endLine);
+			scopeDocument.put("comment_start_line", doc.get("comment_start_line"));
+			scopeDocument.put("comment_end_line", doc.get("comment_end_line"));
 			scopeDocument.put("codes", codes);
 			List<Integer> verifyScopeEndLine = new ArrayList<Integer>();
 			scopeDocument.put("vscope_end_line", verifyScopeEndLine);
@@ -121,35 +119,28 @@ public class TableGenerator {
 
 	}
 	
-	public static void main3(String[] args) {
-		MongoDatabase database = new MongoClient("192.168.1.128", 27017).getDatabase("sourcebase");
+	public static void generateSubCommentScopeTable() {
+		MongoDatabase database = new MongoClient("192.168.2.168", 27017).getDatabase("scopebase");
 		MongoCollection<Document> scopeComments = database.getCollection("comment_scope");
-		
+		MongoCollection<Document> subScopeComments = database.getCollection("sub_comment_scope");
 		FindIterable<Document> iter = scopeComments.find();
 		MongoCursor<Document> cursor = iter.iterator();
-		int id = 1;
-		while(cursor.hasNext()) {
+		while (cursor.hasNext()) {
 			Document doc = cursor.next();
-			BasicDBObject query = new BasicDBObject();
-			query.put("_id",doc.get("_id"));
-			doc.put("comment_id", id);
-			scopeComments.replaceOne(query,doc);
-			id++;
+			Document subScope = new Document();
+			subScope.append("comment_id", doc.getInteger("comment_id"));
+			subScope.append("project", doc.getString("project"));
+			subScope.append("class_name", doc.getString("class_name"));
+			subScope.append("type",doc.getString("type"));
+			subScope.append("isverify", false);
+			subScopeComments.insertOne(subScope);
 		}
+		
 	}
 	
 	public static void main(String[] args) {
-		MongoDatabase database1 = new MongoClient("192.168.1.128", 27017).getDatabase("sourcebase");
-		MongoCollection<Document> scopeComments1 = database1.getCollection("comment_scope");
-		
-		MongoDatabase database2 = new MongoClient("39.108.99.24", 27017).getDatabase("sourcebase");
-		MongoCollection<Document> scopeComments2 = database2.getCollection("comment_scope");
-		
-		MongoCursor<Document> cursor = scopeComments1.find().iterator();
-		while(cursor.hasNext()) {
-			Document doc = cursor.next();
-			scopeComments2.insertOne(doc);
-		}
+		generateCommentScopeTable();
+		generateSubCommentScopeTable();
 	}
 
 }

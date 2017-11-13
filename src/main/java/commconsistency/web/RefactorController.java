@@ -7,28 +7,16 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import commconsistency.dao.CommentScopeRepository;
-import commconsistency.domain.CommentScope;
-import commconsistency.domain.EndLineVerify;
-import commconsistency.domain.Line;
 import commconsistency.domain.MethodExtractor;
-import commconsistency.domain.SubCommentScope;
 import commconsistency.domain.SubMethodExtractor;
-import commconsistency.dto.CommentScopeDto;
 import commconsistency.dto.MethodExtractorDto;
-import commconsistency.service.CommentScopeService;
-import commconsistency.service.EndLineVerifyService;
 import commconsistency.service.MethodExtractorService;
-import commconsistency.service.SubCommentScopeService;
 import commconsistency.service.SubMethodExtractorService;
 import commconsistency.utils.SpringDataPageable;
 

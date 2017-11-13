@@ -97,7 +97,12 @@
                                     </li>
                                 </ul>
                             </li>
-						<li><a href="#">Comment Consistency</a></li>
+						<li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Comment Consistency<b class="caret"></b></a>
+						<ul class="dropdown-menu" id="menu1">
+                                    <li>
+                                        <a th:href="@{/consistency/verificationlist(pageno=1,pagesize=20)}">Verification</a>
+                                    </li>
+                                </ul></li>
 					</ul>
 				</div>
 				<!--/.nav-collapse -->
@@ -117,16 +122,18 @@
 						<thead>
 							<tr>
 								<th>Project</th>
-								<th>CommitID</th>
+								<th>CommentID</th>
 								<th>ClassName</th>
+								
 								<th>View</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr class="odd gradeX" th:each="comment:${commentscopelist}">
 								<td th:text="${comment.project}">JHotdraw</td>
-								<td th:text="${comment.commitID}">1</td>
+								<td th:text="${comment.commentID}">1</td>
 								<td th:text="${comment.className}">Main</td>
+								
 								<td><a
 									th:href="@{/commentscope/verification(commentID=${comment.commentID})} " target="_blank">View</a></td>
 							</tr>

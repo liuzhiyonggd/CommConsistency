@@ -23,7 +23,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import commconsistency.domain.CommentScope;
 import commconsistency.domain.EndLineVerify;
-import commconsistency.domain.Line;
 import commconsistency.domain.SubCommentScope;
 import commconsistency.dto.CommentScopeDto;
 import commconsistency.service.CommentScopeService;
@@ -71,13 +70,12 @@ public class CommentScopeController {
 			CommentScopeDto comment = new CommentScopeDto();
 			comment.setCommentID(subCommentScope.getCommentID());
 			comment.setProject(subCommentScope.getProject());
-			String[] temps = subCommentScope.getCommitID().split(" ");
-			comment.setCommitID(temps[temps.length - 2]);
-			temps = subCommentScope.getClassName().split("\\\\");
+			String[] temps = subCommentScope.getClassName().split("\\\\");
 			temps = temps[temps.length - 1].split("\\.");
 			comment.setClassName(temps[0]);
 			commentList.add(comment);
 		}
+		//TODO 先关闭注释作用域的查看页面
 		model.addAttribute("commentscopelist", commentList);
 		model.addAttribute("pageno",pageNo);
 		return "commentscope/verificationlist";
@@ -113,13 +111,13 @@ public class CommentScopeController {
 				CommentScopeDto comment = new CommentScopeDto();
 				comment.setCommentID(subCommentScope.getCommentID());
 				comment.setProject(subCommentScope.getProject());
-				String[] temps = subCommentScope.getCommitID().split(" ");
-				comment.setCommitID(temps[temps.length - 2]);
-				temps = subCommentScope.getClassName().split("\\\\");
+				String[] temps = subCommentScope.getClassName().split("\\\\");
 				temps = temps[temps.length - 1].split("\\.");
 				comment.setClassName(temps[0]);
 				commentList.add(comment);
 			}
+			
+			//TODO 先关闭注释作用域查看页面
 			model.addAttribute("commentscopelist", commentList);
 			model.addAttribute("pageno",pageNo);
 			return "commentscope/viewlist";
@@ -142,27 +140,23 @@ public class CommentScopeController {
 		CommentScopeDto comment = new CommentScopeDto();
 		comment.setCommentID(commentScope.getCommentID());
 		comment.setProject(commentScope.getProject());
-		String[] temps = commentScope.getCommitID().split(" ");
-		comment.setCommitID(temps[temps.length - 2]);
-		temps = commentScope.getClassName().split("\\\\");
+		String[] temps = commentScope.getClassName().split("\\\\");
 		temps = temps[temps.length - 1].split("\\.");
 		comment.setClassName(temps[0]);
 
 		// 将源代码转换成可以在SyntaxHighlighter中显示的字符串，并保存在Model中。
 		StringBuilder builder = new StringBuilder();
-		Iterator<Line> iter = commentScope.getCodeList().iterator();
-		int i = 0;
-		while (iter.hasNext()) {
-			i++;
-			Line line = iter.next();
-			if (i < commentScope.getMethodStartLine()) {
+		List<String> codeList = commentScope.getCodeList();
+		for(int i=0;i<codeList.size();i++) {
+			String line = codeList.get(i);
+			if (i < commentScope.getMethodStartLine()-1) {
 				continue;
 			}
-			if (i > commentScope.getScopeEndLine()) {
+			if (i > commentScope.getScopeEndLine()-1) {
 				break;
 			}
 
-			builder.append(line.getLine().replace("<", "&lt;")).append("\r\n");
+			builder.append(line.replace("<", "&lt;")).append("\r\n");
 		}
 		comment.setCode(builder.toString());
 		comment.setScopeEndLine(commentScope.getScopeEndLine());
@@ -182,43 +176,19 @@ public class CommentScopeController {
 	}
 	
 	private int nextCommentID(int commentID) {
-		int nextCommentID = commentID;
-		if((commentID>=111182&&commentID<111686)||(commentID>=114674&&commentID<115179)
-				||(commentID>=122577&&commentID<123077)||(commentID>=124859&&commentID<125369)) {
-			nextCommentID++;
+		if(commentID+1<=8942) {
+		    return commentID+1;
+		}else {
+			return commentID;
 		}
-		else if(commentID<111182){
-			nextCommentID = 111182;
-		}else if(commentID>=111686&&commentID<114674) {
-			nextCommentID = 114674;
-		}else if(commentID>=115179&&commentID<122577) {
-			nextCommentID = 122577;
-		}else if(commentID>=123077&&commentID<124859) {
-			nextCommentID = 124859;
-		}else if(commentID>=125369){
-			nextCommentID = 111182;
-		}
-		return nextCommentID;
 	}
 	
 	private int previousCommentID(int commentID) {
-		int previousCommentID = commentID;
-		if((commentID>111182&&commentID<=111686)||(commentID>114674&&commentID<=115179)
-				||(commentID>122577&&commentID<=123077)||(commentID>124859&&commentID<=125369)) {
-			previousCommentID--;
+		if(commentID-1>=0) {
+			return commentID-1;
+		}else {
+			return commentID;
 		}
-		else if(commentID<=111182){
-			previousCommentID = 111182;
-		}else if(commentID>111686&&commentID<=114674) {
-			previousCommentID = 111686;
-		}else if(commentID>115179&&commentID<=122577) {
-			previousCommentID = 115179;
-		}else if(commentID>123077&&commentID<=124859) {
-			previousCommentID = 123077;
-		}else if(commentID>125369){
-			previousCommentID = 125369;
-		}
-		return previousCommentID;
 	}
 	
 	
@@ -246,19 +216,17 @@ public class CommentScopeController {
 			CommentScopeDto comment = new CommentScopeDto();
 			comment.setCommentID(commentScope.getCommentID());
 			comment.setProject(commentScope.getProject());
-			String[] temps = commentScope.getCommitID().split(" ");
-			comment.setCommitID(temps[temps.length - 2]);
-			temps = commentScope.getClassName().split("\\\\");
+			String[] temps = commentScope.getClassName().split("\\\\");
 			temps = temps[temps.length - 1].split("\\.");
 			comment.setClassName(temps[0]);
 
 			// 将源代码转换成可以在SyntaxHighlighter中显示的字符串，并保存在Model中。
 			StringBuilder builder = new StringBuilder();
-			Iterator<Line> iter = commentScope.getCodeList().iterator();
+			Iterator<String> iter = commentScope.getCodeList().iterator();
 			int i = 0;
 			while (iter.hasNext()) {
 				i++;
-				Line line = iter.next();
+				String line = iter.next();
 				if (i < commentScope.getMethodStartLine()) {
 					continue;
 				}
@@ -266,7 +234,7 @@ public class CommentScopeController {
 					break;
 				}
 
-				builder.append(line.getLine().replace("<", "&lt;")).append("\r\n");
+				builder.append(line.replace("<", "&lt;")).append("\r\n");
 			}
 			comment.setCode(builder.toString());
 			comment.setScopeEndLine(commentScope.getScopeEndLine());

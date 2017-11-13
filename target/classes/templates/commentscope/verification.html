@@ -99,7 +99,12 @@
                                     </li>
                                 </ul>
                             </li>
-						<li><a href="#">Comment Consistency</a></li>
+						<li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Comment Consistency<b class="caret"></b></a>
+						<ul class="dropdown-menu" id="menu1">
+                                    <li>
+                                        <a th:href="@{/consistency/verificationlist(pageno=1,pagesize=20)}">Verification</a>
+                                    </li>
+                                </ul></li>
 					</ul>
 				</div>
 				<!--/.nav-collapse -->
@@ -121,7 +126,7 @@
 								<input style="display: none;" th:field="*{commentID}"
 									th:value="${comment.commentID}" />
 								<legend
-									th:text="${comment.project+' '+comment.commitID+'  '+comment.className}"></legend>
+									th:text="${comment.project+' '+comment.commentID+'  '+comment.className}"></legend>
 								<pre class="brush:java;">
                                              
                                         </pre>
