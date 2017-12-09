@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection="sub_comment_scope")
+@Document(collection="r_sub_comment_scope")
 public class SubCommentScope {
 	
 	@Id

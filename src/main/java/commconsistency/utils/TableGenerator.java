@@ -31,7 +31,7 @@ public class TableGenerator {
 	    root.setLevel(Level.INFO);
 	}
 	public static void generateCommentScopeTable() {
-		MongoDatabase database = new MongoClient("192.168.2.168", 27017).getDatabase("scopebase");
+		MongoDatabase database = new MongoClient("192.168.1.60", 27017).getDatabase("scopebase");
 		MongoCollection<Document> classes = database.getCollection("class_message");
 		MongoCollection<Document> comments = database.getCollection("comment");
 		MongoCollection<Document> scopeComments = database.getCollection("comment_scope");
@@ -43,9 +43,9 @@ public class TableGenerator {
 		MongoCursor<Document> cursor = iter.iterator();
 		while (cursor.hasNext()) {
 			Document doc = cursor.next();
-			if(!doc.getString("type").equals("purpose ")) {
-				continue;
-			}
+//			if(!doc.getString("type").equals("purpose ")) {
+//				continue;
+//			}
 			int classID = doc.getInteger("class_id");
 			List<String> commentStrings = (List<String>)doc.get("comment");
 			List<String> codeStrings = (List<String>)doc.get("codes");
@@ -120,7 +120,7 @@ public class TableGenerator {
 	}
 	
 	public static void generateSubCommentScopeTable() {
-		MongoDatabase database = new MongoClient("192.168.2.168", 27017).getDatabase("scopebase");
+		MongoDatabase database = new MongoClient("192.168.1.60", 27017).getDatabase("scopebase");
 		MongoCollection<Document> scopeComments = database.getCollection("comment_scope");
 		MongoCollection<Document> subScopeComments = database.getCollection("sub_comment_scope");
 		FindIterable<Document> iter = scopeComments.find();
@@ -139,7 +139,7 @@ public class TableGenerator {
 	}
 	
 	public static void main(String[] args) {
-		generateCommentScopeTable();
+//		generateCommentScopeTable();
 		generateSubCommentScopeTable();
 	}
 

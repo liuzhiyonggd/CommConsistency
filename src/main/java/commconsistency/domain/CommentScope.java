@@ -1,15 +1,12 @@
 package commconsistency.domain;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection="comment_scope")
+@Document(collection="r_comment_scope")
 public class CommentScope {
 
 	@Id

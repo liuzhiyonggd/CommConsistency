@@ -25,18 +25,11 @@ import org.springframework.web.servlet.ModelAndView;
 import commconsistency.domain.CommentEntry;
 import commconsistency.domain.ConsistencyVerify;
 import commconsistency.domain.DiffType;
-import commconsistency.domain.MethodExtractor;
 import commconsistency.domain.SubCommentEntry;
-import commconsistency.domain.SubCommentScope;
-import commconsistency.domain.SubMethodExtractor;
 import commconsistency.dto.CommentEntryDto;
-import commconsistency.dto.CommentScopeDto;
-import commconsistency.dto.MethodExtractorDto;
 import commconsistency.service.CommentEntryService;
-import commconsistency.service.CommentScopeService;
 import commconsistency.service.ConsistencyVerifyService;
 import commconsistency.service.SubCommentEntryService;
-import commconsistency.service.SubCommentScopeService;
 import commconsistency.utils.SpringDataPageable;
 
 @Controller

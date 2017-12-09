@@ -4,11 +4,15 @@ package commconsistency.web;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -131,7 +135,7 @@ public class CommentScopeController {
 		CommentScope commentScope = commentScopeService.findByCommentID(commentID);
 		EndLineVerify verify = endLineVerifyService.findByCommentID(commentID);
 		while(commentScope==null||verify!=null) {
-			commentID = nextCommentID(commentID);
+			commentID = getNextCommentID(commentID);
 			commentScope = commentScopeService.findByCommentID(commentID);
 			verify = endLineVerifyService.findByCommentID(commentID);
 		}
@@ -175,22 +179,6 @@ public class CommentScopeController {
 		return "commentscope/verification";
 	}
 	
-	private int nextCommentID(int commentID) {
-		if(commentID+1<=8942) {
-		    return commentID+1;
-		}else {
-			return commentID;
-		}
-	}
-	
-	private int previousCommentID(int commentID) {
-		if(commentID-1>=0) {
-			return commentID-1;
-		}else {
-			return commentID;
-		}
-	}
-	
 	
 	// 根据用户传递回来的commentID查找表，返回该comment的详细信息。
 		@RequestMapping("/commentscope/view")
@@ -203,10 +191,10 @@ public class CommentScopeController {
 			EndLineVerify endLineVerify = endLineVerifyService.findByCommentID(commentID);
 			while(endLineVerify==null) {
 				if(isNext.equals("true")) {
-				    commentID = nextCommentID(commentID);
+				    commentID = getNextCommentID(commentID);
 				    endLineVerify = endLineVerifyService.findByCommentID(commentID);
 				}else {
-					commentID = previousCommentID(commentID);
+					commentID = getPreviousCommentID(commentID);
 					endLineVerify = endLineVerifyService.findByCommentID(commentID);
 				}
 			}
@@ -304,5 +292,45 @@ public class CommentScopeController {
 		};
 		
 		return "index";
+	}
+	private static Map<Integer,Integer> nextIDMap = new HashMap<Integer,Integer>();
+	private static Map<Integer,Integer> previousIDMap = new HashMap<Integer,Integer>();
+	static {
+		try {
+			List<String> randomIDFile = FileUtils.readLines(new File("file/r_commentidlist.txt"),"UTF-8");
+			List<Integer> idList = new ArrayList<Integer>();
+			for(String str:randomIDFile) {
+				idList.add(Integer.parseInt(str));
+			}
+			for(int i=0;i<idList.size()-1;i++) {
+				nextIDMap.put(idList.get(i), idList.get(i+1));
+			}
+			nextIDMap.put(idList.get(idList.size()-1), idList.get(0));
+			nextIDMap.put(0,idList.get(0));
+			
+			for(int i=1;i<idList.size();i++) {
+				previousIDMap.put(idList.get(i), idList.get(i-1));
+			}
+			previousIDMap.put(idList.get(0), idList.get(idList.size()-1));
+			previousIDMap.put(0, idList.get(0));
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private int getNextCommentID(int commentID) {
+		if(nextIDMap.containsKey(commentID)) {
+		    return nextIDMap.get(commentID);
+		}else {
+			return nextIDMap.get(0);
+		}
+	}
+	private int getPreviousCommentID(int commentID) {
+		if(previousIDMap.containsKey(commentID)) {
+			return previousIDMap.get(commentID);
+		}else {
+			return previousIDMap.get(0);
+		}
 	}
 }
