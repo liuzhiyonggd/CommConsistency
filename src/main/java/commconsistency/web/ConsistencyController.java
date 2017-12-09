@@ -116,10 +116,10 @@ public class ConsistencyController {
 				
 				Set<Integer> oldHighLightSet = new TreeSet<Integer>();
 				Set<Integer> newHighLightSet = new TreeSet<Integer>();
-				int newOffSet = newOffSetMap.get(commentEntry.getCommentID());
-				int oldOffSet = oldOffSetMap.get(commentEntry.getCommentID());
-				int entryNewStartLine = commentEntry.getNew_comment_startLine()-newOffSet;
-				int entryOldStartLine =commentEntry.getOld_comment_startLine()-oldOffSet;
+//				int newOffSet = newOffSetMap.get(commentEntry.getCommentID());
+//				int oldOffSet = oldOffSetMap.get(commentEntry.getCommentID());
+				int entryNewStartLine = commentEntry.getNew_comment_startLine();
+				int entryOldStartLine =commentEntry.getOld_comment_startLine();
 				for(DiffType diff:commentEntry.getDiffList()){
 					if(diff.getType().indexOf("PARENT")<0&&diff.getType().indexOf("ORDER")<0){
 					if(diff.getNewStartLine()>0){
@@ -197,31 +197,31 @@ public class ConsistencyController {
 		}
 		
 		private static Map<Integer,Integer> nextIDMap = new HashMap<Integer,Integer>();
-		private static Map<Integer,Integer> oldOffSetMap = new HashMap<Integer,Integer>();
-		private static Map<Integer,Integer> newOffSetMap = new HashMap<Integer,Integer>();
+//		private static Map<Integer,Integer> oldOffSetMap = new HashMap<Integer,Integer>();
+//		private static Map<Integer,Integer> newOffSetMap = new HashMap<Integer,Integer>();
 		static {
 			try {
-				List<String> randomIDFile = FileUtils.readLines(new File("file/false1_rq2_4000.txt"),"UTF-8");
+				List<String> randomIDFile = FileUtils.readLines(new File("file/purpose_id_random.txt"),"UTF-8");
 				List<Integer> idList = new ArrayList<Integer>();
 				for(String str:randomIDFile) {
 					idList.add(Integer.parseInt(str));
 				}
-				Collections.sort(idList);
 				for(int i=0;i<idList.size()-1;i++) {
 					nextIDMap.put(idList.get(i), idList.get(i+1));
 				}
-				nextIDMap.put(idList.get(idList.size()-1), 0);
+				nextIDMap.put(idList.get(idList.size()-1), idList.get(0));
+				nextIDMap.put(0, idList.get(0));
 				
-				List<String> oldOffSetFile = FileUtils.readLines(new File("file/oldchangeline2.csv"),"UTF-8");
-				for(String str:oldOffSetFile) {
-					String[] temps = str.split(",");
-					oldOffSetMap.put(Integer.parseInt(temps[0]), Integer.parseInt(temps[1]));
-				}
-				List<String> newOffSetFile = FileUtils.readLines(new File("file/newchangeline2.csv"),"UTF-8");
-				for(String str:newOffSetFile) {
-					String[] temps = str.split(",");
-					newOffSetMap.put(Integer.parseInt(temps[0]), Integer.parseInt(temps[1]));
-				}
+//				List<String> oldOffSetFile = FileUtils.readLines(new File("file/oldchangeline2.csv"),"UTF-8");
+//				for(String str:oldOffSetFile) {
+//					String[] temps = str.split(",");
+//					oldOffSetMap.put(Integer.parseInt(temps[0]), Integer.parseInt(temps[1]));
+//				}
+//				List<String> newOffSetFile = FileUtils.readLines(new File("file/newchangeline2.csv"),"UTF-8");
+//				for(String str:newOffSetFile) {
+//					String[] temps = str.split(",");
+//					newOffSetMap.put(Integer.parseInt(temps[0]), Integer.parseInt(temps[1]));
+//				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -231,7 +231,7 @@ public class ConsistencyController {
 			if(nextIDMap.containsKey(commentID)) {
 			    return nextIDMap.get(commentID);
 			}else {
-				return 42;
+				return nextIDMap.get(0);
 			}
 		}
 		

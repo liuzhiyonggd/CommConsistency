@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection="consistency_verify4")
+@Document(collection="consistency_verify6")
 public class ConsistencyVerify {
 	@Id
 	private String id;

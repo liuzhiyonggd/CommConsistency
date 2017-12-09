@@ -185,9 +185,11 @@ public class CommentScopeController {
 		public String commentScopeView(@RequestParam("commentID") String paramsStr,@RequestParam("isNext") String isNext, Model model) {
 
 			int commentID = Integer.parseInt(paramsStr);
-			
-			
-		
+			if(isNext.equals("true")) {
+				commentID = getNextCommentID(commentID);
+			}else {
+				commentID = getPreviousCommentID(commentID);
+			}
 			EndLineVerify endLineVerify = endLineVerifyService.findByCommentID(commentID);
 			while(endLineVerify==null) {
 				if(isNext.equals("true")) {
@@ -268,7 +270,7 @@ public class CommentScopeController {
 		subCommentScope.setVerify(true);
 		subCommentScopeService.save(subCommentScope);
 		
-		return new ModelAndView("redirect:/commentscope/verification?commentID="+(commentID+1));
+		return new ModelAndView("redirect:/commentscope/verification?commentID="+getNextCommentID(commentID));
 	}
 	
 	@RequestMapping("/commentscope/uploadview")
