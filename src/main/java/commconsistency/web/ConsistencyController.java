@@ -1,7 +1,9 @@
 package commconsistency.web;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,6 +15,8 @@ import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -201,9 +205,11 @@ public class ConsistencyController {
 //		private static Map<Integer,Integer> newOffSetMap = new HashMap<Integer,Integer>();
 		static {
 			try {
-				List<String> randomIDFile = FileUtils.readLines(new File("file/purpose_id_random.txt"),"UTF-8");
+				Resource resource = new ClassPathResource("file/purpose_id_random.txt");
+				BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
 				List<Integer> idList = new ArrayList<Integer>();
-				for(String str:randomIDFile) {
+				String str = null;
+				while((str = br.readLine())!=null) {
 					idList.add(Integer.parseInt(str));
 				}
 				for(int i=0;i<idList.size()-1;i++) {

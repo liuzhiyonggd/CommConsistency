@@ -1,8 +1,10 @@
 package commconsistency.web;
 
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -299,9 +303,17 @@ public class CommentScopeController {
 	private static Map<Integer,Integer> previousIDMap = new HashMap<Integer,Integer>();
 	static {
 		try {
-			List<String> randomIDFile = FileUtils.readLines(new File("file/r_commentidlist.txt"),"UTF-8");
+//			String path = CommentScopeController.class.getResource("/").getPath();
+//			System.out.println(path);
+//			String path2 = CommentScopeController.class.getResource("").getPath();
+//			System.out.println(path2);
+//			String path3 = CommentScopeController.class.getClassLoader().getResource("file/r_commentidlist.txt").getPath();
+//			System.out.println(path3);
+			Resource resource = new ClassPathResource("file/r_commentidlist.txt");
+			BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
 			List<Integer> idList = new ArrayList<Integer>();
-			for(String str:randomIDFile) {
+			String str = null;
+			while((str = br.readLine())!=null) {
 				idList.add(Integer.parseInt(str));
 			}
 			for(int i=0;i<idList.size()-1;i++) {

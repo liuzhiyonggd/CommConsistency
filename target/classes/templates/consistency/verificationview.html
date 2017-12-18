@@ -170,19 +170,13 @@
 			 <select name="reason" class="selectpicker" data-style="btn-primary">
 				<optgroup>
 					<option value="not_relation">代码变化与注释不相关</option>
-					<option value="refactoring">代码同构</option>
-					<option value="code_clone">代码克隆</option>
+					<option value="refactoring">代码重构</option>
 					<option value="relation_nochange">注释涵盖代码变化</option>
 				</optgroup>
 				<optgroup>
 					<option value="add_function">新增功能需添加注释</option>
 					<option value="change_related">代码修改与注释相关</option>
 					<option value="delete_related">代码删除与注释相关</option>
-				</optgroup>
-				<optgroup>
-					<option value="confusion">代码逻辑混乱，无法判断</option>
-					<option value="change_error">代码无变化</option>
-					<option value="scope_error">注释范围划分不准确</option>
 				</optgroup>
 			</select>
 			<button type="submit" class="btn btn-primary">Save</button>
