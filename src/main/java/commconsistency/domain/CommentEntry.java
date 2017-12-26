@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection="comment6")
+@Document(collection="comment")
 public class CommentEntry {
 	@Id
 	private String id;
@@ -83,10 +83,10 @@ public class CommentEntry {
 	private boolean isVerify=false;
 	
 	@Field("filter1")
-	private boolean filter1 = false;//ע��Ϊ������ע�ͣ�ע�͵�����3-20֮�䣬ע�����������С��30
+	private boolean filter1 = false;
 	
 	@Field("filter2")
-	private boolean filter2 = false;//�����filter1��ѡȡ3000��
+	private boolean filter2 = false;
 	
 	@Field("ischange_probability")
 	private double isChangeProbability=0d;

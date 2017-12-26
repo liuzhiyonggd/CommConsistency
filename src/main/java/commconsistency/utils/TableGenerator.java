@@ -140,7 +140,7 @@ public class TableGenerator {
 	
 	public static void main(String[] args) {
 		MongoDatabase database = new MongoClient("192.168.1.60", 27017).getDatabase("scopebase");
-		MongoDatabase database2 = new MongoClient("120.79.66.219", 27017).getDatabase("scopebase");
+		MongoDatabase database2 = new MongoClient("120.79.66.219", 27027).getDatabase("scopebase");
 		MongoCollection<Document> rCommentScopes = database.getCollection("r_comment_scope");
 		MongoCollection<Document> rSubCommentScopes = database.getCollection("r_sub_comment_scope");
 		MongoCollection<Document> rEndLines = database.getCollection("r_endline_verify");
@@ -150,23 +150,23 @@ public class TableGenerator {
 		MongoCollection<Document> users = database.getCollection("user");
 		MongoCollection<Document> users2 = database2.getCollection("user");
 		
-//		MongoCursor<Document> cursor = rCommentScopes.find().iterator();
-//		while(cursor.hasNext()) {
-//			Document doc = cursor.next();
-//			rCommentScopes2.insertOne(doc);
-//		}
-//		
-//		MongoCursor<Document> cursor2 = rSubCommentScopes.find().iterator();
-//		while(cursor2.hasNext()) {
-//			Document doc = cursor2.next();
-//			rSubCommentScopes2.insertOne(doc);
-//		}
-//		
-//		MongoCursor<Document> cursor3 = rEndLines.find().iterator();
-//		while(cursor3.hasNext()) {
-//			Document doc = cursor3.next();
-//			rEndLines2.insertOne(doc);
-//		}
+		MongoCursor<Document> cursor = rCommentScopes.find().iterator();
+		while(cursor.hasNext()) {
+			Document doc = cursor.next();
+			rCommentScopes2.insertOne(doc);
+		}
+		
+		MongoCursor<Document> cursor2 = rSubCommentScopes.find().iterator();
+		while(cursor2.hasNext()) {
+			Document doc = cursor2.next();
+			rSubCommentScopes2.insertOne(doc);
+		}
+		
+		MongoCursor<Document> cursor3 = rEndLines.find().iterator();
+		while(cursor3.hasNext()) {
+			Document doc = cursor3.next();
+			rEndLines2.insertOne(doc);
+		}
 		
 		MongoCursor<Document> cursor4 = users.find().iterator();
 		while(cursor4.hasNext()) {

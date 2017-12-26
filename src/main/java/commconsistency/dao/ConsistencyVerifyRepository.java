@@ -11,5 +11,6 @@ public interface ConsistencyVerifyRepository extends MongoRepository<Consistency
 	
 	List<EndLineVerify> findByUserName(String userName);
 	EndLineVerify findASingleByCommentID(int commentID);
+	
 
 }

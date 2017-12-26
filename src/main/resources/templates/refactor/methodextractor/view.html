@@ -104,6 +104,8 @@
                                     <li>
                                         <a th:href="@{/consistency/verificationlist(pageno=1,pagesize=20)}">Verification</a>
                                     </li>
+                                    <li><a th:href="@{/consistency/filterlist(pageno=1,pagesize=20)}">Filter</a>
+								</li>
                                 </ul></li>
 					</ul>
 				</div>
@@ -166,7 +168,7 @@
 				</div>
 			</div>
 			<form action="" style="text-align: center;">
-			    <label>Is Refactor?</label>
+			    <label>Is Filter?</label>
 			    <input type="button" class="btn btn-primary" onclick="yes()" value="YES" id="yes_btn"></input>
 			    <input type="button" class="btn btn-danger" onclick="no()" value="NO" id="no_btn"></input>
 			</form>

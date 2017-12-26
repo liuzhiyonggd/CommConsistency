@@ -11,11 +11,10 @@
 	media="screen" />
 <link href="/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"
 	media="screen" />
-<link href="/bootstrap/css/bootstrapValidator.css" rel="stylesheet"
-	media="screen" />
 <link href="/vendors/easypiechart/jquery.easy-pie-chart.css"
 	rel="stylesheet" media="screen" />
 <link href="/assets/styles.css" rel="stylesheet" media="screen" />
+<link href="/assets/DT_bootstrap.css" rel="stylesheet" media="screen" />
 <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
             <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -42,7 +41,7 @@
 				<a class="btn btn-navbar" data-toggle="collapse"
 					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 					class="icon-bar"></span> <span class="icon-bar"></span>
-				</a> <a class="brand" href="#">Comment Consistency</a>
+				</a> <a class="brand" href="/">Comment Consistency</a>
 				<div class="nav-collapse collapse">
 					<ul class="nav pull-right">
 						<li class="dropdown"><a href="#" role="button"
@@ -58,7 +57,6 @@
 											onclick="document.getElementById('_form1').submit();">Logout</a>
 									</form>
 								</li>
-
 
 								<li sec:authorize="hasRole('ROLE_ANONYMOUS')">
 									<form id="_form2" method="get" th:action="@{/login}">
@@ -113,130 +111,62 @@
 			</div>
 		</div>
 	</div>
-	
+	<div class="container">
 		<div class="row-fluid">
-		   
 			<!-- block -->
 			<div class="block">
 				<div class="navbar navbar-inner block-header">
-					<div class="muted pull-left">Code View</div>
-					<div class="muted pull-right" th:value="${methodextractor.methodExtractorId}"></div>
+					<div class="muted pull-left">Comment Consistency</div>
 				</div>
 				<div class="block-content collapse in">
-					<div class="span6" style="height:600px;overflow: scroll;">
-						<form id="commentForm" class="span12"
-							th:object="${methodextractor}" method="post">
-							<fieldset>
-								<input style="display: none;" th:field="*{project}"
-									th:value="${methodextractor.project}" />
-									<input style="display: none;" th:field="*{commitID}"
-									th:value="${methodextractor.commitID}" />
-									<input style="display: none;" th:field="*{className}"
-									th:value="${methodextractor.className}" />
-								<legend
-									th:text="${methodextractor.project+' '+' :old'}"></legend>
-								<div class="span12">
-								<pre id="code1">
-                                             
-                                        </pre>
-								</div>
-							</fieldset>
-						</form>
-						</div>
-						<div class="span6" style="overflow: scroll;height:600px" >
-						<form id="commentForm2" class="span12"
-							th:object="${methodextractor}" method="post">
-							<fieldset>
-								<input style="display: none;" th:field="*{project}"
-									th:value="${methodextractor.project}" />
-									<input style="display: none;" th:field="*{commitID}"
-									th:value="${methodextractor.commitID}" />
-									<input style="display: none;" th:field="*{className}"
-									th:value="${methodextractor.className}" />
-								<legend
-									th:text="${methodextractor.project+' '+' :new'}"></legend>
-								<div class="span12">
-								<pre id="code2">
-                                             
-                                        </pre>
-								</div>
-							</fieldset>
-						</form>
-						</div>
-						
 
+					<table class="table table-striped" id="commentlisttable">
+						<thead>
+							<tr>
+								<th>Project</th>
+								<th>CommentID</th>
+								<th>ClassName</th>
+								<th>View</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="odd gradeX" th:each="comment:${commententrylist}">
+								<td th:text="${comment.project}">JHotdraw</td>
+								<td th:text="${comment.commentID}">1</td>
+								<td th:text="${comment.className}">Main</td>
+								<td><a
+									th:href="@{/consistency/filterview(id=${comment.commentID},isNext=true)} " target="_blank">View</a></td>
+							</tr>
+						</tbody>
+					</table>
+					<ul class="pager">
+						<li class="previous"><a
+							th:href="@{/consistency/filterlist(pageno=${pageno-1},pagesize=20)}">&larr;
+								Previous</a></li>
+						<li class="next" th:text="${'page '+pageno}"></li>
+						<li class="next"><a
+							th:href="@{/consistency/filterlist(pageno=${pageno+1},pagesize=20)}">Next
+								&rarr;</a></li>
+
+
+					</ul>
 				</div>
 			</div>
-			<form action="" style="text-align: center;">
-			    <label>Is Filter?</label>
-			    <input type="button" class="btn btn-primary" onclick="yes()" value="YES" id="yes_btn"></input>
-			    <input type="button" class="btn btn-danger" onclick="no()" value="NO" id="no_btn"></input>
-			</form>
 			<!-- /block -->
-			</div>
-			
+		</div>
 
+	</div>
 
-	<script src="/vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 	<script src="/vendors/jquery-1.9.1.js"></script>
 	<script src="/bootstrap/js/bootstrap.min.js"></script>
-	<script src="/vendors/jquery.uniform.min.js"></script>
-	<script src="/vendors/chosen.jquery.min.js"></script>
-	<script src="/vendors/bootstrap-datepicker.js"></script>
+	<script src="/vendors/datatables/js/jquery.dataTables.min.js"></script>
 
-	<script src="/vendors/wysiwyg/wysihtml5-0.3.0.js"></script>
-	<script src="/vendors/wysiwyg/bootstrap-wysihtml5.js"></script>
-
-	<script src="/vendors/wizard/jquery.bootstrap.wizard.min.js"></script>
-
-	<script type="text/javascript"
-		src="/vendors/jquery-validation/dist/jquery.validate.min.js"></script>
-	<script src="/assets/form-validation.js"></script>
 
 	<script src="/assets/scripts.js"></script>
-	<!-- syntaxHighlighter -->
-	<script type="text/javascript"
-		src="/vendors/syntaxhighlighter/scripts/shCore.js"></script>
-	<script type="text/javascript"
-		src="/vendors/syntaxhighlighter/scripts/shBrushJava.js"></script>
-	<script type="text/javascript" src="/bootstrap/js/bootstrapValidator.js"></script>
-	<script th:inline="javascript">
-	    var pre1 = document.getElementById('code1');
-	    var pre2 = document.getElementById('code2');
-	    pre1.innerHTML = [[${methodextractor.oldCode}]];
-	    pre2.innerHTML = [[${methodextractor.newCode}]];
-	    var class1Value = 'brush:java;highlight:['+[[${oldhighlight}]]+"];";
-	    pre1.setAttribute("class",class1Value);
-	    var class2Value = 'brush:java;highlight:['+[[${newhighlight}]]+"];";
-	    pre2.setAttribute("class",class2Value);
-	    SyntaxHighlighter.all();
-	    function Cleartext(tname){
-            var t=document.getElementById(tname).value="";
-        }
-	    console.log("syntaxHighlighter run.");
+	<script src="/assets/DT_bootstrap.js"></script>
+	<script>
+		
 	</script>
-	
-	<script th:inline="javascript">
-	/*<![CDATA[*/
-		function yes(){
-	    	 window.location.href="/refactor/methodextractor/save?verify=true&id="+[[${methodextractor.methodExtractorId}]];
-	    	 document.getElementById('yes_btn').disable = true;
-	    	 document.getElementById('yes_btn').disable = true;
-	    } 
-	/*]]>*/
-	    
-	</script>
-	
-	<script th:inline="javascript">
-	/*<![CDATA[*/
-		function no(){
-	    	 window.location.href="/refactor/methodextractor/save?verify=false&id="+[[${methodextractor.methodExtractorId}]];
-	    	 document.getElementById('yes_btn').disable = true;
-	    	 document.getElementById('yes_btn').disable = true;
-	    } 
-	/*]]>*/
-	</script>
-
 </body>
 
 </html>

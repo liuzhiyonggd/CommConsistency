@@ -20,6 +20,8 @@ public class ConsistencyVerifyService {
 		consistencyVerifyRepository.insert(consistencyVerify);
 	}
 	
+	
+	
 	public EndLineVerify findByCommentID(int commentID) {
 		return consistencyVerifyRepository.findASingleByCommentID(commentID);
 	}

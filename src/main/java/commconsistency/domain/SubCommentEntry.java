@@ -4,7 +4,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection="sub_comment_entry6")
+/**
+ * @author Administrator
+ *
+ */
+@Document(collection="sub_comment")
 public class SubCommentEntry {
 	
 	@Id
@@ -18,10 +22,14 @@ public class SubCommentEntry {
 	@Field("class_name")
 	private String className;
 	
-	private String type;
-	
 	@Field("isverify")
 	private boolean isVerify;
+	
+	@Field("verify_type")
+	private String verifyType;
+	
+	@Field("comment_type")
+	private String commentType;
 	
 	@Field("filter1")
 	private boolean filter1;
@@ -59,11 +67,18 @@ public class SubCommentEntry {
 	public void setVerify(boolean isVerify) {
 		this.isVerify = isVerify;
 	}
-	public String getType() {
-		return type;
+	
+	public String getVerifyType() {
+		return verifyType;
 	}
-	public void setType(String type) {
-		this.type = type;
+	public void setVerifyType(String verifyType) {
+		this.verifyType = verifyType;
+	}
+	public String getCommentType() {
+		return commentType;
+	}
+	public void setCommentType(String commentType) {
+		this.commentType = commentType;
 	}
 	public boolean isFilter1() {
 		return filter1;

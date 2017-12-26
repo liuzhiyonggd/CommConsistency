@@ -23,6 +23,16 @@ public class SubCommentEntryService {
 		return subCommentEntryList;
 	}
 	
+	public Page<SubCommentEntry> findByFilter1(boolean filter1,Pageable pageable) {
+	    Page<SubCommentEntry> subCommentEntryList = subCommentEntryRepository.findByFilter1(filter1, pageable);
+	    return subCommentEntryList;
+	}
+	
+	public Page<SubCommentEntry> findByFilter2(boolean filter2,Pageable pageable){
+		Page<SubCommentEntry> subCommentEntryList = subCommentEntryRepository.findByFilter2(filter2,pageable);
+	    return subCommentEntryList;
+	}
+	
 	public void save(SubCommentEntry subCommentEntry) {
 		subCommentEntryRepository.save(subCommentEntry);
 	}
