@@ -28,6 +28,7 @@ E:\git\CommConsistency\src\main\java\commconsistency\domain\SubCommentScope.java
 E:\git\CommConsistency\src\main\java\commconsistency\dao\SubMethodExtractorRepository.java
 E:\git\CommConsistency\src\main\java\commconsistency\dao\UserRepository.java
 E:\git\CommConsistency\src\main\java\commconsistency\service\SubMethodExtractorService.java
+E:\git\CommConsistency\src\main\java\commconsistency\dao\test\SubCommentEntryRepositoryTest.java
 E:\git\CommConsistency\src\main\java\commconsistency\refactor\abstracts\Refactor.java
 E:\git\CommConsistency\src\main\java\commconsistency\dto\CommentScopeDto.java
 E:\git\CommConsistency\src\main\java\commconsistency\dao\CommentEntryRepository.java
@@ -35,6 +36,7 @@ E:\git\CommConsistency\src\main\java\commconsistency\scope\ClassifierLoader.java
 E:\git\CommConsistency\src\main\java\commconsistency\dao\EndLineVerifyRepository.java
 E:\git\CommConsistency\src\main\java\commconsistency\web\CommentScopeController.java
 E:\git\CommConsistency\src\main\java\commconsistency\dao\MethodExtractorRepository.java
+E:\git\CommConsistency\src\main\java\commconsistency\utils\SubCommentEntryGenerator.java
 E:\git\CommConsistency\src\main\java\commconsistency\service\SubCommentScopeService.java
 E:\git\CommConsistency\src\main\java\commconsistency\domain\Token.java
 E:\git\CommConsistency\src\main\java\commconsistency\scope\RandomForestClassifier.java
