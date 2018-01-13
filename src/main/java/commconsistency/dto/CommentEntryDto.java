@@ -8,6 +8,7 @@ public class CommentEntryDto {
 	private String className;
 	private String newCode;
 	private String oldCode;
+	private String comment;
 	private boolean isConsistency;
 	public int getCommentID() {
 		return commentID;
@@ -50,6 +51,12 @@ public class CommentEntryDto {
 	}
 	public void setConsistency(boolean isConsistency) {
 		this.isConsistency = isConsistency;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 	

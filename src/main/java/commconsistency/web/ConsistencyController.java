@@ -1,11 +1,9 @@
 package commconsistency.web;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -26,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import commconsistency.dao.SubCommentEntryRepository;
 import commconsistency.domain.CommentEntry;
 import commconsistency.domain.ConsistencyVerify;
 import commconsistency.domain.DiffType;
@@ -45,6 +43,52 @@ public class ConsistencyController {
 	private SubCommentEntryService subCommentEntryService;
 	@Autowired
 	private ConsistencyVerifyService consistencyVerifyService;
+	
+	private static Map<Integer,Integer> nextIDMap = new HashMap<Integer,Integer>();
+	private static Map<Integer,Integer> previousIDMap = new HashMap<Integer,Integer>();
+	
+	private static List<Integer> commentIDList = new ArrayList<Integer>();
+	static {
+		try {
+			Resource resource = new ClassPathResource("file/false1id.txt");
+			BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
+			List<Integer> idList = new ArrayList<Integer>();
+			String str = null;
+			while((str = br.readLine())!=null) {
+				idList.add(Integer.parseInt(str));
+			}
+			commentIDList = idList;
+			for(int i=0;i<idList.size()-1;i++) {
+				nextIDMap.put(idList.get(i), idList.get(i+1));
+			}
+			nextIDMap.put(idList.get(idList.size()-1), idList.get(0));
+			nextIDMap.put(0,idList.get(0));
+			
+			for(int i=1;i<idList.size();i++) {
+				previousIDMap.put(idList.get(i), idList.get(i-1));
+			}
+			previousIDMap.put(idList.get(0), idList.get(idList.size()-1));
+			previousIDMap.put(0, idList.get(0));
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private int getNextCommentID(int commentID) {
+		if(nextIDMap.containsKey(commentID)) {
+		    return nextIDMap.get(commentID);
+		}else {
+			return nextIDMap.get(0);
+		}
+	}
+	private int getPreviousCommentID(int commentID) {
+		if(previousIDMap.containsKey(commentID)) {
+			return previousIDMap.get(commentID);
+		}else {
+			return previousIDMap.get(0);
+		}
+	}
 
 	// consistency list(未验证) 展示
 	@RequestMapping("/consistency/verificationlist")
@@ -53,6 +97,10 @@ public class ConsistencyController {
 		if (pageNo <= 1) {
 			pageNo = 1;
 		}
+		if(pageNo >4) {
+			pageNo = 4;
+		}
+		
 		SpringDataPageable pageable = new SpringDataPageable();
 		// 每页显示条数
 		pageable.setPagesize(pageSize);
@@ -67,6 +115,16 @@ public class ConsistencyController {
 		}
 
 		List<CommentEntryDto> commentList = new ArrayList<CommentEntryDto>();
+//		for(int i=(pageNo-1)*20;i<(pageNo)*20&&i<commentIDList.size();i++) {
+//			SubCommentEntry subCommentEntry = subCommentEntryService.findByCommentID(commentIDList.get(i));
+//			CommentEntryDto comment = new CommentEntryDto();
+//			comment.setCommentID(subCommentEntry.getCommentID());
+//			comment.setProject(subCommentEntry.getProject());
+//			String[] temps = subCommentEntry.getClassName().split("\\\\");
+//			temps = temps[temps.length - 1].split("\\.");
+//			comment.setClassName(temps[0]);
+//			commentList.add(comment);
+//		}
 
 		// 将获取到的数据表重新打包成更小结构的DTO对象，传送给页面展示
 		Iterator<SubCommentEntry> iter = page.iterator();
@@ -101,18 +159,20 @@ public class ConsistencyController {
 		commentEntryDto.setClassName(commentEntry.getClassName());
 		commentEntryDto.setCommentID(commentEntry.getCommentID());
 
-		List<String> oldCodes = commentEntry.getOldComment();
-		oldCodes.addAll(commentEntry.getOldCode());
 		StringBuilder sb = new StringBuilder();
-		for (String str : oldCodes) {
+		for (String str : commentEntry.getOldComment()) {
+			sb.append(str.replace("<", "&lt;")).append("\r\n");
+		}
+		commentEntryDto.setComment(sb.toString());
+		
+		sb = new StringBuilder();
+		for (String str : commentEntry.getOldCode()) {
 			sb.append(str.replace("<", "&lt;")).append("\r\n");
 		}
 		commentEntryDto.setOldCode(sb.toString());
 
-		List<String> newCodes = commentEntry.getNewComment();
-		newCodes.addAll(commentEntry.getNewCode());
 		sb = new StringBuilder();
-		for (String str : newCodes) {
+		for (String str : commentEntry.getNewCode()) {
 			sb.append(str.replace("<", "&lt;")).append("\r\n");
 		}
 		commentEntryDto.setNewCode(sb.toString());
@@ -122,8 +182,8 @@ public class ConsistencyController {
 		Set<Integer> newHighLightSet = new TreeSet<Integer>();
 		// int newOffSet = newOffSetMap.get(commentEntry.getCommentID());
 		// int oldOffSet = oldOffSetMap.get(commentEntry.getCommentID());
-		int entryNewStartLine = commentEntry.getNew_comment_startLine();
-		int entryOldStartLine = commentEntry.getOld_comment_startLine();
+		int entryNewStartLine = commentEntry.getNew_comment_endLine()+1;
+		int entryOldStartLine = commentEntry.getOld_comment_endLine()+1;
 		for (DiffType diff : commentEntry.getDiffList()) {
 			if (diff.getType().indexOf("PARENT") < 0 && diff.getType().indexOf("ORDER") < 0) {
 				if (diff.getNewStartLine() > 0) {
@@ -198,58 +258,7 @@ public class ConsistencyController {
 		return new ModelAndView("redirect:/consistency/verificationview?id=" + (getNextCommentID(commentId)));
 	}
 
-	private static Map<Integer, Integer> nextIDMap = new HashMap<Integer, Integer>();
-	// private static Map<Integer,Integer> oldOffSetMap = new
-	// HashMap<Integer,Integer>();
-	// private static Map<Integer,Integer> newOffSetMap = new
-	// HashMap<Integer,Integer>();
-	static {
-		try {
-			Resource resource = new ClassPathResource("file/purpose_id_random.txt");
-			BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
-			List<Integer> idList = new ArrayList<Integer>();
-			String str = null;
-			while ((str = br.readLine()) != null) {
-				idList.add(Integer.parseInt(str));
-			}
-			for (int i = 0; i < idList.size() - 1; i++) {
-				nextIDMap.put(idList.get(i), idList.get(i + 1));
-			}
-			nextIDMap.put(idList.get(idList.size() - 1), idList.get(0));
-			nextIDMap.put(0, idList.get(0));
 
-			// List<String> oldOffSetFile = FileUtils.readLines(new
-			// File("file/oldchangeline2.csv"),"UTF-8");
-			// for(String str:oldOffSetFile) {
-			// String[] temps = str.split(",");
-			// oldOffSetMap.put(Integer.parseInt(temps[0]), Integer.parseInt(temps[1]));
-			// }
-			// List<String> newOffSetFile = FileUtils.readLines(new
-			// File("file/newchangeline2.csv"),"UTF-8");
-			// for(String str:newOffSetFile) {
-			// String[] temps = str.split(",");
-			// newOffSetMap.put(Integer.parseInt(temps[0]), Integer.parseInt(temps[1]));
-			// }
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private int getNextCommentID(int commentID) {
-		// if(nextIDMap.containsKey(commentID)) {
-		// return nextIDMap.get(commentID);
-		// }else {
-		// return nextIDMap.get(0);
-		// }
-		commentID = commentID + 1;
-		SubCommentEntry subComment = subCommentEntryService.findByCommentID(commentID);
-		while (subComment == null || subComment.isFilter2()) {
-			commentID = commentID + 1;
-			subComment = subCommentEntryService.findByCommentID(commentID);
-		}
-		return commentID;
-	}
 
 	// consistency list(未验证) 展示
 	@RequestMapping("/consistency/filterlist")
@@ -265,7 +274,7 @@ public class ConsistencyController {
 		pageable.setPagenumber(pageNo);
 
 		// 使用数据量更小的表sub_comment_scope，加快读取速度
-		Page<SubCommentEntry> page = subCommentEntryService.findByFilter2(false, pageable);
+		Page<SubCommentEntry> page = subCommentEntryService.findByFilter1AndFilter2(true,false, pageable);
 
 		if (page.isLast()) {
 			pageNo = pageNo - 1;
@@ -307,7 +316,6 @@ public class ConsistencyController {
 		commentEntryDto.setClassName(commentEntry.getClassName());
 		commentEntryDto.setCommentID(commentEntry.getCommentID());
 
-		List<String> comments = commentEntry.getOldComment();
 		// List<String> oldCodes = commentEntry.getOldComment();
 		// oldCodes.addAll(commentEntry.getOldCode());
 		List<String> oldCodes = commentEntry.getOldCode();

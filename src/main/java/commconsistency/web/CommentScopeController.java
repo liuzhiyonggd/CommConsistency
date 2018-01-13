@@ -142,6 +142,7 @@ public class CommentScopeController {
 			commentID = getNextCommentID(commentID);
 			commentScope = commentScopeService.findByCommentID(commentID);
 			verify = endLineVerifyService.findByCommentID(commentID);
+			System.out.println("commentScope:"+commentScope+" verify:"+verify);
 		}
 
 		// 将查找到的对象进行DTO对象转换，转换成更小的对象传递给页面展示

@@ -24,22 +24,22 @@ public class Main {
 	}
 	
 	
-	@Bean
-	public RedisTemplate<Object,Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) throws UnknownHostException{
-	    RedisTemplate<Object,Object> template = new RedisTemplate<Object,Object>();
-	    template.setConnectionFactory(redisConnectionFactory);
-	    
-	    @SuppressWarnings({ "rawtypes", "unchecked" })
-		Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-	    ObjectMapper om = new ObjectMapper();
-	    om.setVisibility(PropertyAccessor.ALL,JsonAutoDetect.Visibility.ANY);
-	    om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-	    jackson2JsonRedisSerializer.setObjectMapper(om);
-	    
-	    template.setValueSerializer(jackson2JsonRedisSerializer);
-	    template.setKeySerializer(new StringRedisSerializer());
-	    
-	    template.afterPropertiesSet();
-	    return template;
-	}
+//	@Bean
+//	public RedisTemplate<Object,Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) throws UnknownHostException{
+//	    RedisTemplate<Object,Object> template = new RedisTemplate<Object,Object>();
+//	    template.setConnectionFactory(redisConnectionFactory);
+//	    
+//	    @SuppressWarnings({ "rawtypes", "unchecked" })
+//		Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+//	    ObjectMapper om = new ObjectMapper();
+//	    om.setVisibility(PropertyAccessor.ALL,JsonAutoDetect.Visibility.ANY);
+//	    om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+//	    jackson2JsonRedisSerializer.setObjectMapper(om);
+//	    
+//	    template.setValueSerializer(jackson2JsonRedisSerializer);
+//	    template.setKeySerializer(new StringRedisSerializer());
+//	    
+//	    template.afterPropertiesSet();
+//	    return template;
+//	}
 }

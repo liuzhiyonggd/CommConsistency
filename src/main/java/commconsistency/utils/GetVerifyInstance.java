@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.bson.Document;
+
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 
 import commconsistency.dao.ConsistencyVerifyRepository;
 import commconsistency.dao.RepositoryFactory;
@@ -15,18 +20,21 @@ public class GetVerifyInstance {
 	
 	public static void main(String[] args) throws IOException {
 		
-		ConsistencyVerifyRepository consistencyRepo = RepositoryFactory.getConsistencyRepository();
-		List<String> output = new ArrayList<String>();
-		List<ConsistencyVerify> verifyList = consistencyRepo.findAll();
+		MongoClient client = MongoConnect.getClient();
+		MongoCollection<Document> verifys = client.getDatabase("sourcebase").getCollection("consistency_verify6");
 		
-		for(ConsistencyVerify verify:verifyList) {
-			if(verify.getChangeReason().equals("scope_error")) {
-				continue;
-			}
-			output.add(verify.getCommentID()+","+(verify.getChangeReason().equals("refactoring")?1:0)+","+verify.getChangeReason()+","+verify.isChange());
+		List<String> output = new ArrayList<String>();
+		MongoCursor<Document> cursor = verifys.find().iterator();
+		while(cursor.hasNext()) {
+			Document doc = cursor.next();
+			int commentID = doc.getInteger("comment_id");
+			String changeReason = doc.getString("change_reason");
+			boolean isChange = doc.getBoolean("ischange");
+			String userName = doc.getString("username");
+			output.add(commentID+","+changeReason+","+userName+","+isChange);
 		}
 		
-		FileUtils.writeLines(new File("E:\\注释一致性实验\\数据\\new_selectID.txt"), output);
+		FileUtils.writeLines(new File("file/verifyresult.txt"), output);
 	}
 
 }

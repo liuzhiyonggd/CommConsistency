@@ -37,7 +37,7 @@
 	rel="stylesheet" />
 <link href="/vendors/syntaxhighlighter/styles/shCoreEclipse.css"
 	rel="stylesheet" />
-	
+
 </head>
 
 <body>
@@ -105,7 +105,8 @@
 								<li><a
 									th:href="@{/consistency/verificationlist(pageno=1,pagesize=20)}">Verification</a>
 								</li>
-								<li><a th:href="@{/consistency/filterlist(pageno=1,pagesize=20)}">Filter</a>
+								<li><a
+									th:href="@{/consistency/filterlist(pageno=1,pagesize=20)}">Filter</a>
 								</li>
 							</ul></li>
 					</ul>
@@ -116,7 +117,6 @@
 	</div>
 
 	<div class="row-fluid">
-
 		<!-- block -->
 		<div class="block">
 			<div class="navbar navbar-inner block-header">
@@ -124,7 +124,7 @@
 				<div class="muted pull-right" th:value="${commententry.commentID}"></div>
 			</div>
 			<div class="block-content collapse in">
-				<div class="span6" style="height: 600px; overflow: scroll;">
+				<div class="span12" style="height: 150px; overflow: scroll;">
 					<form id="commentForm" class="span12" th:object="${commententry}"
 						method="post">
 						<fieldset>
@@ -134,33 +134,54 @@
 								th:value="${commententry.commitID}" /> <input
 								style="display: none;" th:field="*{className}"
 								th:value="${commententry.className}" />
-							<legend th:text="${commententry.project+' '+commententry.className+' : old version'}"></legend>
+							<legend th:text="comment"></legend>
 							<div class="span12">
-								<pre id="code1">
+								<pre id="comment">
                                              
                                         </pre>
 							</div>
 						</fieldset>
 					</form>
 				</div>
-				<div class="span6" style="overflow: scroll; height: 600px">
-					<form id="commentForm2" class="span12" th:object="${commententry}"
-						method="post">
-						<fieldset>
-							<input style="display: none;" th:field="*{project}"
-								th:value="${commententry.project}" /> <input
-								style="display: none;" th:field="*{commitID}"
-								th:value="${commententry.commitID}" /> <input
-								style="display: none;" th:field="*{className}"
-								th:value="${commententry.className}" />
-							<legend th:text="${commententry.project+' '+commententry.className+' : new version'}"></legend>
-							<div class="span12">
-								<pre id="code2">
+				<div class="span12">
+					<div class="span6" style="height: 600px; overflow: scroll;">
+						<form id="commentForm1" class="span12" th:object="${commententry}"
+							method="post">
+							<fieldset>
+								<input style="display: none;" th:field="*{project}"
+									th:value="${commententry.project}" /> <input
+									style="display: none;" th:field="*{commitID}"
+									th:value="${commententry.commitID}" /> <input
+									style="display: none;" th:field="*{className}"
+									th:value="${commententry.className}" />
+								<legend th:text="old_version"></legend>
+								<div class="span12">
+									<pre id="code1">
                                              
                                         </pre>
-							</div>
-						</fieldset>
-					</form>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+					<div class="span6" style="overflow: scroll; height: 600px">
+						<form id="commentForm2" class="span12" th:object="${commententry}"
+							method="post">
+							<fieldset>
+								<input style="display: none;" th:field="*{project}"
+									th:value="${commententry.project}" /> <input
+									style="display: none;" th:field="*{commitID}"
+									th:value="${commententry.commitID}" /> <input
+									style="display: none;" th:field="*{className}"
+									th:value="${commententry.className}" />
+								<legend th:text="new_version"></legend>
+								<div class="span12">
+									<pre id="code2">
+                                             
+                                        </pre>
+								</div>
+							</fieldset>
+						</form>
+					</div>
 				</div>
 
 
@@ -168,18 +189,21 @@
 		</div>
 		<form action="/consistency/save" style="text-align: center;">
 			<label>Is Change?</label> <input type="hidden" name="comment_id"
-				th:value="${commententry.commentID}" />
-			 <select name="reason" class="selectpicker" data-style="btn-primary">
+				th:value="${commententry.commentID}" /> <select name="reason"
+				class="selectpicker" data-style="btn-primary">
+
 				<optgroup>
-					<option value="not_relation">代码变化与注释不相关</option>
-					<option value="refactoring">代码重构</option>
-					<option value="relation_nochange">注释涵盖代码变化</option>
+					<option value="add_function">comment changes due to inserting code</option>
+					<option value="change_related">comment changes due to updating code</option>
+					<option value="delete_related">comment changes due to deleting code</option>
 				</optgroup>
 				<optgroup>
-					<option value="add_function">新增功能需添加注释</option>
-					<option value="change_related">代码修改与注释相关</option>
-					<option value="delete_related">代码删除与注释相关</option>
+					<option value="relation_nochange">comment needn't be changed</option>
 				</optgroup>
+				<optgroup>
+					<option value="unknown">can not determine</option>
+				</optgroup>
+
 			</select>
 			<button type="submit" class="btn btn-primary">Save</button>
 		</form>
@@ -214,10 +238,14 @@
 		src="/bootstrap/js/bootstrapValidator.js"></script>
 	<script type="text/javascript" src="/bootstrap/js/bootstrap-select.js"></script>
 	<script th:inline="javascript">
+	    var pre = document.getElementById('comment');
 	    var pre1 = document.getElementById('code1');
 	    var pre2 = document.getElementById('code2');
+	    pre.innerHTML = [[${commententry.comment}]];
 	    pre1.innerHTML = [[${commententry.oldCode}]];
 	    pre2.innerHTML = [[${commententry.newCode}]];
+	    var commentValue = 'brush:java;';
+	    pre.setAttribute("class",commentValue);
 	    var class1Value = 'brush:java;highlight:['+[[${oldhighlight}]]+"];";
 	    pre1.setAttribute("class",class1Value);
 	    var class2Value = 'brush:java;highlight:['+[[${newhighlight}]]+"];";
